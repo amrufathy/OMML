@@ -75,12 +75,11 @@ class MLP(Network):
         # omega contains all free params of the network
         omega = np.concatenate([self.V, self.W.reshape(self.W.size, 1), self.b.T])
         # initial error
-        print(f'Initial training error = {self.test_loss(inputs, labels):.3f}')
+        print(f'Initial training error: {self.test_loss(inputs, labels):.3f}')
         # back-propagation
         tik = time.time()
         optimal = optimize.minimize(fun=self.loss, x0=omega, args=(inputs, labels))
         tok = time.time()
-        print(optimal.message)
 
         # print out required info
         print(f'Number of neurons: {self.hidden_size}')
@@ -88,7 +87,7 @@ class MLP(Network):
         print(f'Value of rho: {self.rho}')
         print(f'Solver: BFGS (Default)')
         print(f'Number of function evaluations: {optimal.nfev}')
-        print(f'Number of gradient evaluations: ')
+        print(f'Number of gradient evaluations: {optimal.njev}')
         print(f'Time for optimization: {(tok - tik):.3f} seconds')
         print(f'Termination message: {optimal.message}')
         print(f'Training error: {self.test_loss(inputs, labels):.3f}')
@@ -142,7 +141,7 @@ class RBF(Network):
         # omega contains all free params of the network
         omega = np.concatenate([self.V, self.C.reshape(self.C.size, 1)])
         # initial error
-        print(f'Initial training error = {self.test_loss(inputs, labels):.3f}')
+        print(f'Initial training error: {self.test_loss(inputs, labels):.3f}')
         # back-propagation
         tik = time.time()
         optimal = optimize.minimize(fun=self.loss, x0=omega, args=(inputs, labels))
@@ -154,7 +153,7 @@ class RBF(Network):
         print(f'Value of rho: {self.rho}')
         print(f'Solver: BFGS (Default)')
         print(f'Number of function evaluations: {optimal.nfev}')
-        print(f'Number of gradient evaluations: ')
+        print(f'Number of gradient evaluations: {optimal.njev}')
         print(f'Time for optimization: {(tok - tik):.3f} seconds')
         print(f'Termination message: {optimal.message}')
         print(f'Training error: {self.test_loss(inputs, labels):.3f}')
@@ -189,7 +188,7 @@ if __name__ == '__main__':
     print('-------------')
 
     print('---- RBF ----')
-    rbf = RBF(hidden_size=5)
+    rbf = RBF(hidden_size=50)
     rbf.fit(x_train, y_train)
     rbf.surface_plot(x_test)
     print(f'Test error = {rbf.test_loss(x_test, y_test):.3f}')
