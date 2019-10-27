@@ -1,8 +1,10 @@
-import time
 import itertools
+import time
+
 import matplotlib.pyplot as plt
 import numpy as np
 import scipy.optimize as optimize
+# noinspection PyUnresolvedReferences
 from mpl_toolkits.mplot3d import Axes3D
 from sklearn.model_selection import train_test_split
 
@@ -39,7 +41,7 @@ class Network:
 
         fig = plt.figure()
         ax = fig.gca(projection='3d')
-        # Axes3D(fig)
+        # noinspection PyPep8Naming
         X1, X2, Y = inputs[:, 0], inputs[:, 1], outputs.ravel()
         # ax.scatter(X1, X2, Y, color="red", alpha=1)
         ax.plot_trisurf(X1, X2, Y, cmap='viridis', edgecolor='none')
