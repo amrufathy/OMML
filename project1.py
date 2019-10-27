@@ -35,6 +35,12 @@ class Network:
     def fit(self, *args):
         raise NotImplementedError
 
+    def save(self, *args):
+        raise NotImplementedError
+
+    def load(self, *args):
+        raise NotImplementedError
+
     def surface_plot(self, inputs, optimal_params, title=''):
         # TODO (Amr): not final yet, but working so far
         outputs = self.forward(inputs, optimal_params)
@@ -64,10 +70,7 @@ class MLP(Network):
         super().__init__(hidden_size, input_size, output_size, _rho)
 
     def forward(self, inputs, omega):
-        # unpack omega
-        self.V = omega[:self.V.size].reshape(*self.V.shape)
-        self.W = omega[self.V.size: self.V.size + self.W.size].reshape(*self.W.shape)
-        self.b = omega[self.V.size + self.W.size:].reshape(*self.b.shape)
+        self.__unpack_omega(omega)
 
         intermediate_output = np.tanh(np.dot(inputs, self.W) - self.b)
 
@@ -100,9 +103,24 @@ class MLP(Network):
         outputs = self.forward(inputs, omega)
         return np.mean(np.square(outputs - labels))
 
+    def save(self, filename=''):
+        omega = np.concatenate([self.V, self.W.reshape(self.W.size, 1), self.b.T])
+        filename = 'mlp_weights' if filename == '' else filename
+        np.save(filename, omega)
+
+    def load(self, filename=''):
+        filename = 'mlp_weights.npy' if filename == '' else filename
+        omega = np.load(filename)
+        self.__unpack_omega(omega)
+
     def surface_plot(self, inputs, *args):
         optimal_parameters = np.concatenate([self.V, self.W.reshape(self.W.size, 1), self.b.T])
         super().surface_plot(inputs, optimal_parameters, 'MLP')
+
+    def __unpack_omega(self, omega):
+        self.V = omega[:self.V.size].reshape(*self.V.shape)
+        self.W = omega[self.V.size: self.V.size + self.W.size].reshape(*self.W.shape)
+        self.b = omega[self.V.size + self.W.size:].reshape(*self.b.shape)
 
 
 class RBF(Network):
@@ -119,9 +137,7 @@ class RBF(Network):
         super().__init__(hidden_size, input_size, output_size, _rho)
 
     def forward(self, inputs, omega):
-        # unpack omega
-        self.V = omega[:self.V.size].reshape(*self.V.shape)
-        self.C = omega[self.V.size:].reshape(*self.C.shape)
+        self.__unpack_omega(omega)
 
         # C needs to be in shape (#samples, dim, #centroids)
         c = np.tile(self.C, (inputs.shape[0], 1, 1))
@@ -166,9 +182,23 @@ class RBF(Network):
         outputs = self.forward(inputs, omega)
         return np.mean(np.square(outputs - labels))
 
+    def save(self, filename=''):
+        omega = np.concatenate([self.V, self.C.reshape(self.C.size, 1)])
+        filename = 'rbf_weights' if filename == '' else filename
+        np.save(filename, omega)
+
+    def load(self, filename=''):
+        filename = 'rbf_weights.npy' if filename == '' else filename
+        omega = np.load(filename)
+        self.__unpack_omega(omega)
+
     def surface_plot(self, inputs, *args):
         optimal_parameters = np.concatenate([self.V, self.C.reshape(self.C.size, 1)])
         super().surface_plot(inputs, optimal_parameters, 'RBF')
+
+    def __unpack_omega(self, omega):
+        self.V = omega[:self.V.size].reshape(*self.V.shape)
+        self.C = omega[self.V.size:].reshape(*self.C.shape)
 
 
 if __name__ == '__main__':
@@ -184,14 +214,18 @@ if __name__ == '__main__':
 
     print('---- MLP ----')
     mlp = MLP(hidden_size=50)
-    mlp.fit(x_train, y_train)
+    # mlp.fit(x_train, y_train)
+    # mlp.save()
+    mlp.load()
     mlp.surface_plot(x_test)
     print(f'Test error = {mlp.test_loss(x_test, y_test):.3f}')
     print('-------------')
 
     print('---- RBF ----')
     rbf = RBF(hidden_size=50)
-    rbf.fit(x_train, y_train)
+    # rbf.fit(x_train, y_train)
+    # rbf.save()
+    rbf.load()
     rbf.surface_plot(x_test)
     print(f'Test error = {rbf.test_loss(x_test, y_test):.3f}')
     print('-------------')
@@ -203,5 +237,18 @@ if __name__ == '__main__':
     rho = [1, 2, 3]  # regularization weight
     sigma = [1, 2, 3]  # spread of gaussian function (RBF)
 
+    best_val_err = np.inf
+    best_params = None
+
     for params in itertools.product(*(N, rho, sigma)):
         n, r, s = params
+        mlp = MLP(hidden_size=n, _rho=r)
+        mlp.fit(x_train, y_train)
+
+        err = mlp.test_loss(x_val, y_val)
+        print(f'Error: {err} <=> Params: {params}')
+
+        if err < best_val_err:
+            best_params = params
+
+    print(f'Best params: {best_params}')
