@@ -111,7 +111,7 @@ class MLP(Network):
     def decomposition(self, inputs, labels):
         # TODO: implement Q3
         # Hint: Alternate the optimization procedure between `V` and `W, b`
-        # Note: minimization of `V` is convex (same as other problems)
+        # Note: minimization of `V` is convex
         #   minimization of `W, b` is non-convex
         # Maybe helpful: https://scipy-lectures.org/advanced/mathematical_optimization/index.html
         raise NotImplementedError
