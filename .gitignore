@@ -1,1 +1,5 @@
+# PyCharms files
 .idea
+
+# All saved numpy variables
+*.npy

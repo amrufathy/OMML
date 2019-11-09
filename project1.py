@@ -35,6 +35,12 @@ class Network:
     def fit(self, *args):
         raise NotImplementedError
 
+    def extreme_learning(self, *args):
+        raise NotImplementedError
+
+    def decomposition(self, *args):
+        raise NotImplementedError
+
     def save(self, *args):
         raise NotImplementedError
 
@@ -96,6 +102,19 @@ class MLP(Network):
         print(f'Time for optimization: {(tok - tik):.3f} seconds')
         print(f'Termination message: {optimal.message}')
         print(f'Training error: {self.test_loss(inputs, labels):.3f}')
+
+    def extreme_learning(self, inputs, labels):
+        # TODO: implement Q2.1
+        # Hint: This difference between this function and `fit` is that we minimize over `V` only
+        raise NotImplementedError
+
+    def decomposition(self, inputs, labels):
+        # TODO: implement Q3
+        # Hint: Alternate the optimization procedure between `V` and `W, b`
+        # Note: minimization of `V` is convex (same as other problems)
+        #   minimization of `W, b` is non-convex
+        # Maybe helpful: https://scipy-lectures.org/advanced/mathematical_optimization/index.html
+        raise NotImplementedError
 
     def test_loss(self, inputs, labels):
         # only for use on val/test data, not during training
@@ -175,6 +194,15 @@ class RBF(Network):
         print(f'Time for optimization: {(tok - tik):.3f} seconds')
         print(f'Termination message: {optimal.message}')
         print(f'Training error: {self.test_loss(inputs, labels):.3f}')
+
+    def extreme_learning(self, inputs, labels):
+        # TODO: implement Q2.2
+        # Hint: re-construct `C` by picking N points from `inputs`, then minimize over `V` only
+        raise NotImplementedError
+
+    def decomposition(self, *args):
+        # TODO (Optional): implement decomposition for RBF
+        raise NotImplementedError('Decomposition method is not implemented for the RBF network!')
 
     def test_loss(self, inputs, labels):
         # only for use on val/test data, not during training
