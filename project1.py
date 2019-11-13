@@ -104,9 +104,26 @@ class MLP(Network):
         print(f'Training error: {self.test_loss(inputs, labels):.3f}')
 
     def extreme_learning(self, inputs, labels):
-        # TODO: implement Q2.1
-        # Hint: This difference between this function and `fit` is that we minimize over `V` only
-        raise NotImplementedError
+        # Q2.1
+        # omega contains all free params of the network
+        omega = self.V
+        # initial error
+        print(f'Initial training error: {self.test_loss(inputs, labels):.3f}')
+        # back-propagation
+        tik = time.time()
+        optimal = optimize.minimize(fun=self.loss, x0=omega, args=(inputs, labels))
+        tok = time.time()
+
+        # print out required info
+        print(f'Number of neurons: {self.hidden_size}')
+        print(f'Value of sigma: {1}')
+        print(f'Value of rho: {self.rho}')
+        print(f'Solver: BFGS (Default)')
+        print(f'Number of function evaluations: {optimal.nfev}')
+        print(f'Number of gradient evaluations: {optimal.njev}')
+        print(f'Time for optimization: {(tok - tik):.3f} seconds')
+        print(f'Termination message: {optimal.message}')
+        print(f'Training error: {self.test_loss(inputs, labels):.3f}')
 
     def decomposition(self, inputs, labels):
         # TODO: implement Q3
