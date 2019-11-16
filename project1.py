@@ -8,6 +8,7 @@ import scipy.optimize as optimize
 from mpl_toolkits.mplot3d import Axes3D
 from sklearn.model_selection import train_test_split
 
+
 SEED = 1848399
 np.random.seed(SEED)
 
@@ -77,19 +78,19 @@ class MLP(Network):
 
     def forward(self, inputs, omega):
         self.__unpack_omega(omega)
-
         intermediate_output = np.tanh(np.dot(inputs, self.W) - self.b)
-
         return np.dot(intermediate_output, self.V)
 
     def fit(self, inputs, labels):
         # omega contains all free params of the network
-        omega = np.concatenate([self.V, self.W.reshape(self.W.size, 1), self.b.T])
+        omega = np.concatenate(
+            [self.V, self.W.reshape(self.W.size, 1), self.b.T])
         # initial error
         print(f'Initial training error: {self.test_loss(inputs, labels):.3f}')
         # back-propagation
         tik = time.time()
-        optimal = optimize.minimize(fun=self.loss, x0=omega, args=(inputs, labels))
+        optimal = optimize.minimize(
+            fun=self.loss, x0=omega, args=(inputs, labels))
         tok = time.time()
 
         # print out required info
@@ -111,7 +112,8 @@ class MLP(Network):
         print(f'Initial training error: {self.test_loss(inputs, labels):.3f}')
         # back-propagation
         tik = time.time()
-        optimal = optimize.minimize(fun=self.loss, x0=omega, args=(inputs, labels))
+        optimal = optimize.minimize(
+            fun=self.loss, x0=omega, args=(inputs, labels))
         tok = time.time()
 
         # print out required info
@@ -135,12 +137,14 @@ class MLP(Network):
 
     def test_loss(self, inputs, labels):
         # only for use on val/test data, not during training
-        omega = np.concatenate([self.V, self.W.reshape(self.W.size, 1), self.b.T])
+        omega = np.concatenate(
+            [self.V, self.W.reshape(self.W.size, 1), self.b.T])
         outputs = self.forward(inputs, omega)
         return np.mean(np.square(outputs - labels))
 
     def save(self, filename=''):
-        omega = np.concatenate([self.V, self.W.reshape(self.W.size, 1), self.b.T])
+        omega = np.concatenate(
+            [self.V, self.W.reshape(self.W.size, 1), self.b.T])
         filename = 'mlp_weights' if filename == '' else filename
         np.save(filename, omega)
 
@@ -150,12 +154,14 @@ class MLP(Network):
         self.__unpack_omega(omega)
 
     def surface_plot(self, inputs, *args):
-        optimal_parameters = np.concatenate([self.V, self.W.reshape(self.W.size, 1), self.b.T])
+        optimal_parameters = np.concatenate(
+            [self.V, self.W.reshape(self.W.size, 1), self.b.T])
         super().surface_plot(inputs, optimal_parameters, 'MLP')
 
     def __unpack_omega(self, omega):
         self.V = omega[:self.V.size].reshape(*self.V.shape)
-        self.W = omega[self.V.size: self.V.size + self.W.size].reshape(*self.W.shape)
+        self.W = omega[self.V.size: self.V.size +
+                       self.W.size].reshape(*self.W.shape)
         self.b = omega[self.V.size + self.W.size:].reshape(*self.b.shape)
 
 
@@ -184,7 +190,8 @@ class RBF(Network):
         for i in range(self.hidden_size):
             # subtract all points from centroid
             # take norm of each distance vector (axis = 1)
-            intermediate_output[:, i] = self.gaussian(np.linalg.norm(inputs - c[:, :, i], axis=1))
+            intermediate_output[:, i] = self.gaussian(
+                np.linalg.norm(inputs - c[:, :, i], axis=1))
 
         return np.dot(intermediate_output, self.V)
 
@@ -198,7 +205,8 @@ class RBF(Network):
         print(f'Initial training error: {self.test_loss(inputs, labels):.3f}')
         # back-propagation
         tik = time.time()
-        optimal = optimize.minimize(fun=self.loss, x0=omega, args=(inputs, labels))
+        optimal = optimize.minimize(
+            fun=self.loss, x0=omega, args=(inputs, labels))
         tok = time.time()
 
         # print out required info
@@ -213,9 +221,28 @@ class RBF(Network):
         print(f'Training error: {self.test_loss(inputs, labels):.3f}')
 
     def extreme_learning(self, inputs, labels):
-        # TODO: implement Q2.2
         # Hint: re-construct `C` by picking N points from `inputs`, then minimize over `V` only
-        raise NotImplementedError
+        self.C = np.random.choice(inputs)
+        # omega contains all free params of the network
+        omega = np.concatenate([self.V, self.C.reshape(self.C.size, 1)])
+        # initial error
+        print(f'Initial training error: {self.test_loss(inputs, labels):.3f}')
+        # back-propagation
+        tik = time.time()
+        optimal = optimize.minimize(
+            fun=self.loss, x0=omega, args=(inputs, labels))
+        tok = time.time()
+
+        # print out required info
+        print(f'Number of neurons: {self.hidden_size}')
+        print(f'Value of sigma: {self.sigma}')
+        print(f'Value of rho: {self.rho}')
+        print(f'Solver: BFGS (Default)')
+        print(f'Number of function evaluations: {optimal.nfev}')
+        print(f'Number of gradient evaluations: {optimal.njev}')
+        print(f'Time for optimization: {(tok - tik):.3f} seconds')
+        print(f'Termination message: {optimal.message}')
+        print(f'Training error: {self.test_loss(inputs, labels):.3f}')
 
     def decomposition(self, *args):
         # TODO (Optional): implement decomposition for RBF
@@ -238,7 +265,8 @@ class RBF(Network):
         self.__unpack_omega(omega)
 
     def surface_plot(self, inputs, *args):
-        optimal_parameters = np.concatenate([self.V, self.C.reshape(self.C.size, 1)])
+        optimal_parameters = np.concatenate(
+            [self.V, self.C.reshape(self.C.size, 1)])
         super().surface_plot(inputs, optimal_parameters, 'RBF')
 
     def __unpack_omega(self, omega):
@@ -254,23 +282,25 @@ if __name__ == '__main__':
     y = np.expand_dims(y, -1)  # row -> column vector
 
     # train 70%, validation 15%, test 15%
-    x_train, x_rest, y_train, y_rest = train_test_split(x, y, train_size=0.7, random_state=SEED)
-    x_val, x_test, y_val, y_test = train_test_split(x_rest, y_rest, train_size=0.5, random_state=SEED)
+    x_train, x_rest, y_train, y_rest = train_test_split(
+        x, y, train_size=0.7, random_state=SEED)
+    x_val, x_test, y_val, y_test = train_test_split(
+        x_rest, y_rest, train_size=0.5, random_state=SEED)
 
     print('---- MLP ----')
     mlp = MLP(hidden_size=50)
-    # mlp.fit(x_train, y_train)
-    # mlp.save()
-    mlp.load()
+    mlp.fit(x_train, y_train)
+    mlp.save()
+    # mlp.load()
     mlp.surface_plot(x_test)
     print(f'Test error = {mlp.test_loss(x_test, y_test):.3f}')
     print('-------------')
 
     print('---- RBF ----')
     rbf = RBF(hidden_size=50)
-    # rbf.fit(x_train, y_train)
-    # rbf.save()
-    rbf.load()
+    rbf.fit(x_train, y_train)
+    rbf.save()
+    # rbf.load()
     rbf.surface_plot(x_test)
     print(f'Test error = {rbf.test_loss(x_test, y_test):.3f}')
     print('-------------')
