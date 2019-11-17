@@ -222,7 +222,7 @@ class RBF(Network):
 
     def extreme_learning(self, inputs, labels):
         # Hint: re-construct `C` by picking N points from `inputs`, then minimize over `V` only
-        self.C = np.random.choice(inputs, 5)
+        self.C = np.random.choice(inputs, size=self.hidden_size)
         # omega contains all free params of the network
         omega = self.V
         # initial error
