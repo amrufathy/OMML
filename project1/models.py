@@ -67,7 +67,7 @@ class Network:
 
 
 class MLP(Network):
-    def __init__(self, hidden_size, input_size=2, output_size=1, _rho=1e-4):
+    def __init__(self, hidden_size, input_size=2, output_size=1, _rho=1e-5):
         # initialize weights and biases
         self.W = np.random.rand(input_size, hidden_size)
         self.V = np.random.rand(hidden_size, output_size)
@@ -107,6 +107,7 @@ class MLP(Network):
     def __run_minimization(self, inputs, labels, omega):
         # initial error
         print(f'Initial training error: {self.test_loss(inputs, labels):.4f}')
+        print(f'Initial value of objective function: {self.loss(omega, inputs, labels):.4f}')
         # back-propagation
         tik = time.time()
         optimal = optimize.minimize(fun=self.loss, x0=omega, args=(inputs, labels))
@@ -120,11 +121,14 @@ class MLP(Network):
         print(f'Value of sigma: {1}')
         print(f'Value of rho: {self.rho}')
         print(f'Solver: BFGS (Default)')
+        print(f'Final value of objective function: {result.fun:.4f}')
+        print(f'Final value of gradient: {np.linalg.norm(result.jac):.4f}')
+        print(f'Number of iterations: {result.nit}')
         print(f'Number of function evaluations: {result.nfev}')
         print(f'Number of gradient evaluations: {result.njev}')
         print(f'Time for optimization: {elapsed_time:.4f} seconds')
         print(f'Termination message: {result.message}')
-        print(f'Training error: {self.test_loss(inputs, labels):.4f}')
+        print(f'Final Training error: {self.test_loss(inputs, labels):.4f}')
 
     def save(self, filename=''):
         omega = np.concatenate([self.V, self.W.reshape(self.W.size, 1), self.b.T])
@@ -198,6 +202,7 @@ class RBF(Network):
     def __run_minimization(self, inputs, labels, omega):
         # initial error
         print(f'Initial training error: {self.test_loss(inputs, labels):.4f}')
+        print(f'Initial value of objective function: {self.loss(omega, inputs, labels):.4f}')
         # back-propagation
         tik = time.time()
         optimal = optimize.minimize(fun=self.loss, x0=omega, args=(inputs, labels))
@@ -211,6 +216,8 @@ class RBF(Network):
         print(f'Value of sigma: {1}')
         print(f'Value of rho: {self.rho}')
         print(f'Solver: BFGS (Default)')
+        print(f'Final value of objective function: {result.fun:.4f}')
+        print(f'Final value of gradient: {np.linalg.norm(result.jac):.4f}')
         print(f'Number of function evaluations: {result.nfev}')
         print(f'Number of gradient evaluations: {result.njev}')
         print(f'Time for optimization: {elapsed_time:.4f} seconds')
@@ -245,8 +252,8 @@ class RBF(Network):
 if __name__ == '__main__':
     dataset = np.genfromtxt('data_points.csv', delimiter=',')
 
-    x = dataset[:, :2]
-    y = dataset[:, 2]
+    x = dataset[1:, :2]
+    y = dataset[1:, 2]
     y = np.expand_dims(y, -1)  # row -> column vector
 
     # train 70%, validation 15%, test 15%
@@ -256,27 +263,29 @@ if __name__ == '__main__':
         x_rest, y_rest, train_size=0.5, random_state=SEED)
 
     # grid search
-    N = [10, 25, 50]  # hidden units
+    N = [5, 10, 25, 50]  # hidden units
     rho = [1e-3, 1e-4, 1e-5]  # regularization weight
     sigma = [0.25, 0.5, 1, 2]  # spread of gaussian function (RBF)
 
     best_val_err = np.inf
     best_params = None
 
-    for params in itertools.product(*(N, rho, sigma)):
-        n, r, s = params
-        rbf = RBF(hidden_size=n, _rho=r, _sigma=s)
-        rbf.fit(x_train, y_train)
+    for params in itertools.product(*(N, rho)):
+        n, r = params
+        mlp = MLP(hidden_size=n, _rho=r)
+        mlp.fit(x_train, y_train)
 
-        err = rbf.test_loss(x_val, y_val)
-        print(f'\nError: {err:.4f} <=> Params: {params}')
+        val_err = mlp.test_loss(x_val, y_val)
+        print(f'\nError: {val_err:.4f} <=> Params: {params}')
 
-        if err < best_val_err:
-            best_val_err = err
+        if val_err < best_val_err:
+            best_val_err = val_err
             best_params = params
 
         print('\n-------------\n')
 
     print(f'Best params: {best_params}')
 
-    best_mlp_params = (50, 1e-5)  # N, rho
+    # mlp = MLP(hidden_size=10, _rho=1e-5)  # best params from grid search
+    # mlp.fit(x_train, y_train)
+    # print(f'Test loss: {mlp.test_loss(x_test, y_test)}')
