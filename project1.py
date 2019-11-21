@@ -83,28 +83,12 @@ class MLP(Network):
     def fit(self, inputs, labels):
         # omega contains all free params of the network
         omega = np.concatenate([self.V, self.W.reshape(self.W.size, 1), self.b.T])
-        # initial error
-        print(f'Initial training error: {self.test_loss(inputs, labels):.3f}')
-        # back-propagation
-        tik = time.time()
-        optimal = optimize.minimize(fun=self.loss, x0=omega, args=(inputs, labels))
-        tok = time.time()
-
-        # print out required info
-        self.__print_training_info(inputs, labels, optimal, tok - tik)
+        self.__run_minimization(inputs, labels, omega)
 
     def extreme_learning(self, inputs, labels):
         # omega contains `V` only
         omega = self.V
-        # initial error
-        print(f'Initial training error: {self.test_loss(inputs, labels):.3f}')
-        # back-propagation
-        tik = time.time()
-        optimal = optimize.minimize(fun=self.loss, x0=omega, args=(inputs, labels))
-        tok = time.time()
-
-        # print out required info
-        self.__print_training_info(inputs, labels, optimal, tok - tik)
+        self.__run_minimization(inputs, labels, omega)
 
     def decomposition(self, inputs, labels):
         # TODO: implement Q3
@@ -120,6 +104,17 @@ class MLP(Network):
         outputs = self.forward(inputs, omega)
         return np.mean(np.square(outputs - labels))
 
+    def __run_minimization(self, inputs, labels, omega):
+        # initial error
+        print(f'Initial training error: {self.test_loss(inputs, labels):.4f}')
+        # back-propagation
+        tik = time.time()
+        optimal = optimize.minimize(fun=self.loss, x0=omega, args=(inputs, labels))
+        tok = time.time()
+
+        # print out required info
+        self.__print_training_info(inputs, labels, optimal, tok - tik)
+
     def __print_training_info(self, inputs, labels, result, elapsed_time):
         print(f'Number of neurons: {self.hidden_size}')
         print(f'Value of sigma: {1}')
@@ -127,9 +122,9 @@ class MLP(Network):
         print(f'Solver: BFGS (Default)')
         print(f'Number of function evaluations: {result.nfev}')
         print(f'Number of gradient evaluations: {result.njev}')
-        print(f'Time for optimization: {elapsed_time:.3f} seconds')
+        print(f'Time for optimization: {elapsed_time:.4f} seconds')
         print(f'Termination message: {result.message}')
-        print(f'Training error: {self.test_loss(inputs, labels):.3f}')
+        print(f'Training error: {self.test_loss(inputs, labels):.4f}')
 
     def save(self, filename=''):
         omega = np.concatenate([self.V, self.W.reshape(self.W.size, 1), self.b.T])
@@ -187,23 +182,22 @@ class RBF(Network):
     def fit(self, inputs, labels):
         # omega contains all free params of the network
         omega = np.concatenate([self.V, self.C.reshape(self.C.size, 1)])
-        # initial error
-        print(f'Initial training error: {self.test_loss(inputs, labels):.3f}')
-        # back-propagation
-        tik = time.time()
-        optimal = optimize.minimize(fun=self.loss, x0=omega, args=(inputs, labels))
-        tok = time.time()
-
-        # print out required info
-        self.__print_training_info(inputs, labels, optimal, tok - tik)
+        self.__run_minimization(inputs, labels, omega)
 
     def extreme_learning(self, inputs, labels):
         # pick `N` centers from `inputs`
         self.C = np.random.choice(inputs, size=self.hidden_size)
         # omega contains `V` only
         omega = self.V
+        self.__run_minimization(inputs, labels, omega)
+
+    def decomposition(self, *args):
+        # TODO (Optional): implement decomposition for RBF
+        raise NotImplementedError('Decomposition method is not implemented for the RBF network!')
+
+    def __run_minimization(self, inputs, labels, omega):
         # initial error
-        print(f'Initial training error: {self.test_loss(inputs, labels):.3f}')
+        print(f'Initial training error: {self.test_loss(inputs, labels):.4f}')
         # back-propagation
         tik = time.time()
         optimal = optimize.minimize(fun=self.loss, x0=omega, args=(inputs, labels))
@@ -211,10 +205,6 @@ class RBF(Network):
 
         # print out required info
         self.__print_training_info(inputs, labels, optimal, tok - tik)
-
-    def decomposition(self, *args):
-        # TODO (Optional): implement decomposition for RBF
-        raise NotImplementedError('Decomposition method is not implemented for the RBF network!')
 
     def __print_training_info(self, inputs, labels, result, elapsed_time):
         print(f'Number of neurons: {self.hidden_size}')
@@ -223,9 +213,9 @@ class RBF(Network):
         print(f'Solver: BFGS (Default)')
         print(f'Number of function evaluations: {result.nfev}')
         print(f'Number of gradient evaluations: {result.njev}')
-        print(f'Time for optimization: {elapsed_time:.3f} seconds')
+        print(f'Time for optimization: {elapsed_time:.4f} seconds')
         print(f'Termination message: {result.message}')
-        print(f'Training error: {self.test_loss(inputs, labels):.3f}')
+        print(f'Training error: {self.test_loss(inputs, labels):.4f}')
 
     def test_loss(self, inputs, labels):
         # only for use on val/test data, not during training
@@ -265,43 +255,28 @@ if __name__ == '__main__':
     x_val, x_test, y_val, y_test = train_test_split(
         x_rest, y_rest, train_size=0.5, random_state=SEED)
 
-    print('---- MLP ----')
-    mlp = MLP(hidden_size=50)
-    mlp.fit(x_train, y_train)
-    mlp.save()
-    # mlp.load()
-    mlp.surface_plot(x_test)
-    print(f'Test error = {mlp.test_loss(x_test, y_test):.3f}')
-    print('-------------')
-
-    print('---- RBF ----')
-    rbf = RBF(hidden_size=50)
-    rbf.fit(x_train, y_train)
-    rbf.save()
-    # rbf.load()
-    rbf.surface_plot(x_test)
-    print(f'Test error = {rbf.test_loss(x_test, y_test):.3f}')
-    print('-------------')
-
     # grid search
-    # TODO: use params for grid search to investigate
-    #       over/under-fitting
-    N = [1, 2, 3]  # hidden units
-    rho = [1, 2, 3]  # regularization weight
-    sigma = [1, 2, 3]  # spread of gaussian function (RBF)
+    N = [10, 25, 50]  # hidden units
+    rho = [1e-3, 1e-4, 1e-5]  # regularization weight
+    sigma = [0.25, 0.5, 1, 2]  # spread of gaussian function (RBF)
 
     best_val_err = np.inf
     best_params = None
 
     for params in itertools.product(*(N, rho, sigma)):
         n, r, s = params
-        mlp = MLP(hidden_size=n, _rho=r)
-        mlp.fit(x_train, y_train)
+        rbf = RBF(hidden_size=n, _rho=r, _sigma=s)
+        rbf.fit(x_train, y_train)
 
-        err = mlp.test_loss(x_val, y_val)
-        print(f'Error: {err} <=> Params: {params}')
+        err = rbf.test_loss(x_val, y_val)
+        print(f'\nError: {err:.4f} <=> Params: {params}')
 
         if err < best_val_err:
+            best_val_err = err
             best_params = params
 
+        print('\n-------------\n')
+
     print(f'Best params: {best_params}')
+
+    best_mlp_params = (50, 1e-5)  # N, rho
