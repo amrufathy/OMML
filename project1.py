@@ -8,7 +8,6 @@ import scipy.optimize as optimize
 from mpl_toolkits.mplot3d import Axes3D
 from sklearn.model_selection import train_test_split
 
-
 SEED = 1848399
 np.random.seed(SEED)
 
@@ -83,49 +82,29 @@ class MLP(Network):
 
     def fit(self, inputs, labels):
         # omega contains all free params of the network
-        omega = np.concatenate(
-            [self.V, self.W.reshape(self.W.size, 1), self.b.T])
+        omega = np.concatenate([self.V, self.W.reshape(self.W.size, 1), self.b.T])
         # initial error
         print(f'Initial training error: {self.test_loss(inputs, labels):.3f}')
         # back-propagation
         tik = time.time()
-        optimal = optimize.minimize(
-            fun=self.loss, x0=omega, args=(inputs, labels))
+        optimal = optimize.minimize(fun=self.loss, x0=omega, args=(inputs, labels))
         tok = time.time()
 
         # print out required info
-        print(f'Number of neurons: {self.hidden_size}')
-        print(f'Value of sigma: {1}')
-        print(f'Value of rho: {self.rho}')
-        print(f'Solver: BFGS (Default)')
-        print(f'Number of function evaluations: {optimal.nfev}')
-        print(f'Number of gradient evaluations: {optimal.njev}')
-        print(f'Time for optimization: {(tok - tik):.3f} seconds')
-        print(f'Termination message: {optimal.message}')
-        print(f'Training error: {self.test_loss(inputs, labels):.3f}')
+        self.__print_training_info(inputs, labels, optimal, tok - tik)
 
     def extreme_learning(self, inputs, labels):
-        # Q2.1
-        # omega contains all free params of the network
+        # omega contains `V` only
         omega = self.V
         # initial error
         print(f'Initial training error: {self.test_loss(inputs, labels):.3f}')
         # back-propagation
         tik = time.time()
-        optimal = optimize.minimize(
-            fun=self.loss, x0=omega, args=(inputs, labels))
+        optimal = optimize.minimize(fun=self.loss, x0=omega, args=(inputs, labels))
         tok = time.time()
 
         # print out required info
-        print(f'Number of neurons: {self.hidden_size}')
-        print(f'Value of sigma: {1}')
-        print(f'Value of rho: {self.rho}')
-        print(f'Solver: BFGS (Default)')
-        print(f'Number of function evaluations: {optimal.nfev}')
-        print(f'Number of gradient evaluations: {optimal.njev}')
-        print(f'Time for optimization: {(tok - tik):.3f} seconds')
-        print(f'Termination message: {optimal.message}')
-        print(f'Training error: {self.test_loss(inputs, labels):.3f}')
+        self.__print_training_info(inputs, labels, optimal, tok - tik)
 
     def decomposition(self, inputs, labels):
         # TODO: implement Q3
@@ -137,14 +116,23 @@ class MLP(Network):
 
     def test_loss(self, inputs, labels):
         # only for use on val/test data, not during training
-        omega = np.concatenate(
-            [self.V, self.W.reshape(self.W.size, 1), self.b.T])
+        omega = np.concatenate([self.V, self.W.reshape(self.W.size, 1), self.b.T])
         outputs = self.forward(inputs, omega)
         return np.mean(np.square(outputs - labels))
 
+    def __print_training_info(self, inputs, labels, result, elapsed_time):
+        print(f'Number of neurons: {self.hidden_size}')
+        print(f'Value of sigma: {1}')
+        print(f'Value of rho: {self.rho}')
+        print(f'Solver: BFGS (Default)')
+        print(f'Number of function evaluations: {result.nfev}')
+        print(f'Number of gradient evaluations: {result.njev}')
+        print(f'Time for optimization: {elapsed_time:.3f} seconds')
+        print(f'Termination message: {result.message}')
+        print(f'Training error: {self.test_loss(inputs, labels):.3f}')
+
     def save(self, filename=''):
-        omega = np.concatenate(
-            [self.V, self.W.reshape(self.W.size, 1), self.b.T])
+        omega = np.concatenate([self.V, self.W.reshape(self.W.size, 1), self.b.T])
         filename = 'mlp_weights' if filename == '' else filename
         np.save(filename, omega)
 
@@ -154,14 +142,12 @@ class MLP(Network):
         self.__unpack_omega(omega)
 
     def surface_plot(self, inputs, *args):
-        optimal_parameters = np.concatenate(
-            [self.V, self.W.reshape(self.W.size, 1), self.b.T])
+        optimal_parameters = np.concatenate([self.V, self.W.reshape(self.W.size, 1), self.b.T])
         super().surface_plot(inputs, optimal_parameters, 'MLP')
 
     def __unpack_omega(self, omega):
         self.V = omega[:self.V.size].reshape(*self.V.shape)
-        self.W = omega[self.V.size: self.V.size +
-                       self.W.size].reshape(*self.W.shape)
+        self.W = omega[self.V.size: self.V.size + self.W.size].reshape(*self.W.shape)
         self.b = omega[self.V.size + self.W.size:].reshape(*self.b.shape)
 
 
@@ -205,48 +191,41 @@ class RBF(Network):
         print(f'Initial training error: {self.test_loss(inputs, labels):.3f}')
         # back-propagation
         tik = time.time()
-        optimal = optimize.minimize(
-            fun=self.loss, x0=omega, args=(inputs, labels))
+        optimal = optimize.minimize(fun=self.loss, x0=omega, args=(inputs, labels))
         tok = time.time()
 
         # print out required info
-        print(f'Number of neurons: {self.hidden_size}')
-        print(f'Value of sigma: {self.sigma}')
-        print(f'Value of rho: {self.rho}')
-        print(f'Solver: BFGS (Default)')
-        print(f'Number of function evaluations: {optimal.nfev}')
-        print(f'Number of gradient evaluations: {optimal.njev}')
-        print(f'Time for optimization: {(tok - tik):.3f} seconds')
-        print(f'Termination message: {optimal.message}')
-        print(f'Training error: {self.test_loss(inputs, labels):.3f}')
+        self.__print_training_info(inputs, labels, optimal, tok - tik)
 
     def extreme_learning(self, inputs, labels):
-        # Hint: re-construct `C` by picking N points from `inputs`, then minimize over `V` only
+        # pick `N` centers from `inputs`
         self.C = np.random.choice(inputs, size=self.hidden_size)
-        # omega contains all free params of the network
+        # omega contains `V` only
         omega = self.V
         # initial error
         print(f'Initial training error: {self.test_loss(inputs, labels):.3f}')
         # back-propagation
         tik = time.time()
-        optimal = optimize.minimize(
-            fun=self.loss, x0=omega, args=(inputs, labels))
+        optimal = optimize.minimize(fun=self.loss, x0=omega, args=(inputs, labels))
         tok = time.time()
 
         # print out required info
-        print(f'Number of neurons: {self.hidden_size}')
-        print(f'Value of sigma: {self.sigma}')
-        print(f'Value of rho: {self.rho}')
-        print(f'Solver: BFGS (Default)')
-        print(f'Number of function evaluations: {optimal.nfev}')
-        print(f'Number of gradient evaluations: {optimal.njev}')
-        print(f'Time for optimization: {(tok - tik):.3f} seconds')
-        print(f'Termination message: {optimal.message}')
-        print(f'Training error: {self.test_loss(inputs, labels):.3f}')
+        self.__print_training_info(inputs, labels, optimal, tok - tik)
 
     def decomposition(self, *args):
         # TODO (Optional): implement decomposition for RBF
         raise NotImplementedError('Decomposition method is not implemented for the RBF network!')
+
+    def __print_training_info(self, inputs, labels, result, elapsed_time):
+        print(f'Number of neurons: {self.hidden_size}')
+        print(f'Value of sigma: {1}')
+        print(f'Value of rho: {self.rho}')
+        print(f'Solver: BFGS (Default)')
+        print(f'Number of function evaluations: {result.nfev}')
+        print(f'Number of gradient evaluations: {result.njev}')
+        print(f'Time for optimization: {elapsed_time:.3f} seconds')
+        print(f'Termination message: {result.message}')
+        print(f'Training error: {self.test_loss(inputs, labels):.3f}')
 
     def test_loss(self, inputs, labels):
         # only for use on val/test data, not during training
@@ -265,8 +244,7 @@ class RBF(Network):
         self.__unpack_omega(omega)
 
     def surface_plot(self, inputs, *args):
-        optimal_parameters = np.concatenate(
-            [self.V, self.C.reshape(self.C.size, 1)])
+        optimal_parameters = np.concatenate([self.V, self.C.reshape(self.C.size, 1)])
         super().surface_plot(inputs, optimal_parameters, 'RBF')
 
     def __unpack_omega(self, omega):
