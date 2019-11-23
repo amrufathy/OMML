@@ -1,3 +1,5 @@
+import sys
+import os
 import itertools
 import time
 import random
@@ -258,7 +260,9 @@ class RBF(Network):
 
 
 if __name__ == '__main__':
-    dataset = np.genfromtxt('data_points.csv', delimiter=',')
+    sys.stdout = with open('log_file.log','w+')
+    path = os.path.join(os.getcwd(), 'omml', 'project1', 'data_points.csv')
+    dataset = np.genfromtxt(path, delimiter=',')
 
     x = dataset[1:, :2]
     y = dataset[1:, 2]
@@ -292,8 +296,28 @@ if __name__ == '__main__':
 
         print('\n-------------\n')
 
-    print(f'Best params: {best_params}')
+    print(f'Best MLP params: {best_params}')
 
     # mlp = MLP(hidden_size=10, _rho=1e-5)  # best params from grid search
     # mlp.fit(x_train, y_train)
     # print(f'Test loss: {mlp.test_loss(x_test, y_test)}')
+
+    best_val_err = np.inf
+    best_params = None
+
+    for params in itertools.product(*(N, rho, sigma)):
+        n, r, s = params
+        rbf = RBF(hidden_size=n, _rho=r, _sigma=s)
+        rbf.fit(x_train, y_train)
+
+        val_err = rbf.test_loss(x_val, y_val)
+        print(f'\nError: {val_err:.4f} <=> Params: {params}')
+
+        if val_err < best_val_err:
+            best_val_err = val_err
+            best_params = params
+
+        print('\n-------------\n')
+
+    print(f'Best RBF params: {best_params}')
+I 
