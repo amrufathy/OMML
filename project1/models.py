@@ -1,5 +1,6 @@
 import itertools
 import time
+import random
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -9,6 +10,7 @@ from mpl_toolkits.mplot3d import Axes3D
 from sklearn.model_selection import train_test_split
 
 SEED = 1848399
+random.seed(SEED)
 np.random.seed(SEED)
 
 
@@ -145,9 +147,12 @@ class MLP(Network):
         super().surface_plot(inputs, optimal_parameters, 'MLP')
 
     def __unpack_omega(self, omega):
+        # `V` always exists
         self.V = omega[:self.V.size].reshape(*self.V.shape)
-        self.W = omega[self.V.size: self.V.size + self.W.size].reshape(*self.W.shape)
-        self.b = omega[self.V.size + self.W.size:].reshape(*self.b.shape)
+        # if `W`, `b` are in omega, unpack it (full minimization)
+        if omega.size > self.V.size:
+            self.W = omega[self.V.size: self.V.size + self.W.size].reshape(*self.W.shape)
+            self.b = omega[self.V.size + self.W.size:].reshape(*self.b.shape)
 
 
 class RBF(Network):
@@ -190,7 +195,7 @@ class RBF(Network):
 
     def extreme_learning(self, inputs, labels):
         # pick `N` centers from `inputs`
-        self.C = np.random.choice(inputs, size=self.hidden_size)
+        self.C = np.array(random.choices(inputs, k=self.hidden_size)).T
         # omega contains `V` only
         omega = self.V
         self.__run_minimization(inputs, labels, omega)
@@ -245,8 +250,11 @@ class RBF(Network):
         super().surface_plot(inputs, optimal_parameters, 'RBF')
 
     def __unpack_omega(self, omega):
+        # `V` always exists
         self.V = omega[:self.V.size].reshape(*self.V.shape)
-        self.C = omega[self.V.size:].reshape(*self.C.shape)
+        # if `C` is in omega, unpack it (full minimization)
+        if omega.size > self.V.size:
+            self.C = omega[self.V.size:].reshape(*self.C.shape)
 
 
 if __name__ == '__main__':
