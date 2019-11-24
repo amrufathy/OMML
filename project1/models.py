@@ -259,22 +259,10 @@ class RBF(Network):
             self.C = omega[self.V.size:].reshape(*self.C.shape)
 
 
-if __name__ == '__main__':
+def grid_search():
+    # print everything to file
     sys.stdout = open('log_file.log', 'w+')
-    path = os.path.join(os.getcwd(), 'omml', 'project1', 'data_points.csv')
-    dataset = np.genfromtxt('data_points.csv', delimiter=',')
 
-    x = dataset[1:, :2]
-    y = dataset[1:, 2]
-    y = np.expand_dims(y, -1)  # row -> column vector
-
-    # train 70%, validation 15%, test 15%
-    x_train, x_rest, y_train, y_rest = train_test_split(
-        x, y, train_size=0.7, random_state=SEED)
-    x_val, x_test, y_val, y_test = train_test_split(
-        x_rest, y_rest, train_size=0.5, random_state=SEED)
-
-    # grid search
     N = [5, 10, 25, 50]  # hidden units
     rho = [1e-3, 1e-4, 1e-5]  # regularization weight
     sigma = [0.25, 0.5, 1, 2]  # spread of gaussian function (RBF)
@@ -326,3 +314,30 @@ if __name__ == '__main__':
         print('\n-------------\n')
 
     print(f'Best RBF params: {best_params}')
+
+
+if __name__ == '__main__':
+    path = os.path.join(os.getcwd(), 'omml', 'project1', 'data_points.csv')
+    dataset = np.genfromtxt('project1/data_points.csv', delimiter=',')
+
+    x = dataset[1:, :2]
+    y = dataset[1:, 2]
+    y = np.expand_dims(y, -1)  # row -> column vector
+
+    # train 70%, validation 15%, test 15%
+    x_train, x_rest, y_train, y_rest = train_test_split(
+        x, y, train_size=0.7, random_state=SEED)
+    x_val, x_test, y_val, y_test = train_test_split(
+        x_rest, y_rest, train_size=0.5, random_state=SEED)
+
+    # hyper-parameter tuning
+    # grid_search()
+
+    # Train & Save best params
+    mlp = MLP(hidden_size=25, _rho=1e-5)
+    mlp.fit(x, y)  # train on all points for best performance
+    mlp.save()
+
+    rbf = RBF(hidden_size=25, _rho=1e-5, _sigma=1)
+    rbf.fit(x, y)
+    rbf.save()
