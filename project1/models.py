@@ -260,7 +260,7 @@ class RBF(Network):
 
 
 if __name__ == '__main__':
-    sys.stdout = with open('log_file.log','w+')
+    sys.stdout = open('log_file.log','w+')
     path = os.path.join(os.getcwd(), 'omml', 'project1', 'data_points.csv')
     dataset = np.genfromtxt(path, delimiter=',')
 
