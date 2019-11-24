@@ -1,8 +1,8 @@
-import sys
-import os
 import itertools
-import time
+import os
 import random
+import sys
+import time
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -260,9 +260,9 @@ class RBF(Network):
 
 
 if __name__ == '__main__':
-    sys.stdout = open('log_file.log','w+')
+    sys.stdout = open('log_file.log', 'w+')
     path = os.path.join(os.getcwd(), 'omml', 'project1', 'data_points.csv')
-    dataset = np.genfromtxt(path, delimiter=',')
+    dataset = np.genfromtxt('data_points.csv', delimiter=',')
 
     x = dataset[1:, :2]
     y = dataset[1:, 2]
@@ -282,13 +282,18 @@ if __name__ == '__main__':
     best_val_err = np.inf
     best_params = None
 
+    print('=' * 10)
+    print('MLP')
+    print('=' * 10)
+
     for params in itertools.product(*(N, rho)):
         n, r = params
         mlp = MLP(hidden_size=n, _rho=r)
         mlp.fit(x_train, y_train)
 
         val_err = mlp.test_loss(x_val, y_val)
-        print(f'\nError: {val_err:.4f} <=> Params: {params}')
+        test_err = mlp.test_loss(x_test, y_test)
+        print(f'\nParams: {params} <=> Val error: {val_err:.4f}, Test error: {test_err:.4f}')
 
         if val_err < best_val_err:
             best_val_err = val_err
@@ -298,12 +303,12 @@ if __name__ == '__main__':
 
     print(f'Best MLP params: {best_params}')
 
-    # mlp = MLP(hidden_size=10, _rho=1e-5)  # best params from grid search
-    # mlp.fit(x_train, y_train)
-    # print(f'Test loss: {mlp.test_loss(x_test, y_test)}')
-
     best_val_err = np.inf
     best_params = None
+
+    print('=' * 10)
+    print('RBF')
+    print('=' * 10)
 
     for params in itertools.product(*(N, rho, sigma)):
         n, r, s = params
@@ -311,7 +316,8 @@ if __name__ == '__main__':
         rbf.fit(x_train, y_train)
 
         val_err = rbf.test_loss(x_val, y_val)
-        print(f'\nError: {val_err:.4f} <=> Params: {params}')
+        test_err = rbf.test_loss(x_test, y_test)
+        print(f'\nParams: {params} <=> Val error: {val_err:.4f}, Test error: {test_err:.4f}')
 
         if val_err < best_val_err:
             best_val_err = val_err
@@ -320,4 +326,3 @@ if __name__ == '__main__':
         print('\n-------------\n')
 
     print(f'Best RBF params: {best_params}')
-I 

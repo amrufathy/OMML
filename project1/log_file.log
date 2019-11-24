@@ -1,3 +1,6 @@
+==========
+MLP
+==========
 Initial training error: 6.1695
 Initial value of objective function: 6.1751
 Number of neurons: 5
@@ -9,11 +12,11 @@ Final value of gradient: 0.0000
 Number of iterations: 125
 Number of function evaluations: 2904
 Number of gradient evaluations: 132
-Time for optimization: 0.1763 seconds
+Time for optimization: 0.2374 seconds
 Termination message: Optimization terminated successfully.
 Final Training error: 0.2014
 
-Error: 0.2273 <=> Params: (5, 0.001)
+Params: (5, 0.001) <=> Val error: 0.2273, Test error: 0.1925
 
 -------------
 
@@ -28,11 +31,11 @@ Final value of gradient: 0.0000
 Number of iterations: 233
 Number of function evaluations: 5456
 Number of gradient evaluations: 248
-Time for optimization: 0.3347 seconds
+Time for optimization: 0.4430 seconds
 Termination message: Optimization terminated successfully.
 Final Training error: 0.0622
 
-Error: 0.1045 <=> Params: (5, 0.0001)
+Params: (5, 0.0001) <=> Val error: 0.1045, Test error: 0.0738
 
 -------------
 
@@ -47,11 +50,11 @@ Final value of gradient: 0.0000
 Number of iterations: 605
 Number of function evaluations: 14102
 Number of gradient evaluations: 641
-Time for optimization: 0.8906 seconds
+Time for optimization: 1.1185 seconds
 Termination message: Optimization terminated successfully.
 Final Training error: 0.1383
 
-Error: 0.1144 <=> Params: (5, 1e-05)
+Params: (5, 1e-05) <=> Val error: 0.1144, Test error: 0.1669
 
 -------------
 
@@ -66,11 +69,11 @@ Final value of gradient: 0.0000
 Number of iterations: 353
 Number of function evaluations: 15414
 Number of gradient evaluations: 367
-Time for optimization: 1.4031 seconds
+Time for optimization: 1.8391 seconds
 Termination message: Optimization terminated successfully.
 Final Training error: 0.0647
 
-Error: 0.1169 <=> Params: (10, 0.001)
+Params: (10, 0.001) <=> Val error: 0.1169, Test error: 0.0424
 
 -------------
 
@@ -85,11 +88,11 @@ Final value of gradient: 0.0000
 Number of iterations: 389
 Number of function evaluations: 16968
 Number of gradient evaluations: 404
-Time for optimization: 1.5454 seconds
+Time for optimization: 2.0163 seconds
 Termination message: Optimization terminated successfully.
 Final Training error: 0.0314
 
-Error: 0.0362 <=> Params: (10, 0.0001)
+Params: (10, 0.0001) <=> Val error: 0.0362, Test error: 0.0286
 
 -------------
 
@@ -104,11 +107,11 @@ Final value of gradient: 0.0000
 Number of iterations: 732
 Number of function evaluations: 32340
 Number of gradient evaluations: 770
-Time for optimization: 2.9174 seconds
+Time for optimization: 3.7474 seconds
 Termination message: Optimization terminated successfully.
 Final Training error: 0.0247
 
-Error: 0.0414 <=> Params: (10, 1e-05)
+Params: (10, 1e-05) <=> Val error: 0.0414, Test error: 0.0258
 
 -------------
 
@@ -123,11 +126,11 @@ Final value of gradient: 0.0000
 Number of iterations: 838
 Number of function evaluations: 87822
 Number of gradient evaluations: 861
-Time for optimization: 22.7485 seconds
+Time for optimization: 28.6962 seconds
 Termination message: Optimization terminated successfully.
 Final Training error: 0.0620
 
-Error: 0.1107 <=> Params: (25, 0.001)
+Params: (25, 0.001) <=> Val error: 0.1107, Test error: 0.0426
 
 -------------
 
@@ -142,11 +145,11 @@ Final value of gradient: 0.0000
 Number of iterations: 2032
 Number of function evaluations: 213180
 Number of gradient evaluations: 2090
-Time for optimization: 60.7182 seconds
+Time for optimization: 75.1591 seconds
 Termination message: Optimization terminated successfully.
 Final Training error: 0.0036
 
-Error: 0.0094 <=> Params: (25, 0.0001)
+Params: (25, 0.0001) <=> Val error: 0.0094, Test error: 0.0046
 
 -------------
 
@@ -161,11 +164,11 @@ Final value of gradient: 0.0000
 Number of iterations: 6690
 Number of function evaluations: 715224
 Number of gradient evaluations: 7012
-Time for optimization: 201.5507 seconds
+Time for optimization: 251.8694 seconds
 Termination message: Optimization terminated successfully.
 Final Training error: 0.0002
 
-Error: 0.0008 <=> Params: (25, 1e-05)
+Params: (25, 1e-05) <=> Val error: 0.0008, Test error: 0.0004
 
 -------------
 
@@ -180,11 +183,11 @@ Final value of gradient: 0.0000
 Number of iterations: 1306
 Number of function evaluations: 273306
 Number of gradient evaluations: 1353
-Time for optimization: 119.9323 seconds
+Time for optimization: 146.8358 seconds
 Termination message: Optimization terminated successfully.
 Final Training error: 0.0616
 
-Error: 0.1098 <=> Params: (50, 0.001)
+Params: (50, 0.001) <=> Val error: 0.1098, Test error: 0.0427
 
 -------------
 
@@ -199,11 +202,11 @@ Final value of gradient: 0.0000
 Number of iterations: 3841
 Number of function evaluations: 804364
 Number of gradient evaluations: 3982
-Time for optimization: 410.5045 seconds
+Time for optimization: 483.4641 seconds
 Termination message: Optimization terminated successfully.
 Final Training error: 0.0036
 
-Error: 0.0093 <=> Params: (50, 0.0001)
+Params: (50, 0.0001) <=> Val error: 0.0093, Test error: 0.0049
 
 -------------
 
@@ -218,18 +221,18 @@ Final value of gradient: 0.0000
 Number of iterations: 3460
 Number of function evaluations: 727402
 Number of gradient evaluations: 3601
-Time for optimization: 385.0913 seconds
+Time for optimization: 444.3547 seconds
 Termination message: Optimization terminated successfully.
 Final Training error: 0.0002
 
-Error: 0.0007 <=> Params: (50, 1e-05)
+Params: (50, 1e-05) <=> Val error: 0.0007, Test error: 0.0003
 
 -------------
 
 Best MLP params: (50, 1e-05)
-
--------------
-
+==========
+RBF
+==========
 Initial training error: 2.5759
 Initial value of objective function: 2.5810
 Number of neurons: 5
@@ -240,11 +243,11 @@ Final value of objective function: 1.9322
 Final value of gradient: 0.0000
 Number of function evaluations: 1428
 Number of gradient evaluations: 84
-Time for optimization: 0.2562 seconds
+Time for optimization: 0.2974 seconds
 Termination message: Optimization terminated successfully.
 Training error: 1.8697
 
-Error: 1.5573 <=> Params: (5, 0.001, 0.25)
+Params: (5, 0.001, 0.25) <=> Val error: 1.5573, Test error: 1.5344
 
 -------------
 
@@ -258,11 +261,11 @@ Final value of objective function: 1.6036
 Final value of gradient: 0.0000
 Number of function evaluations: 1020
 Number of gradient evaluations: 60
-Time for optimization: 0.1496 seconds
+Time for optimization: 0.1912 seconds
 Termination message: Optimization terminated successfully.
 Training error: 1.5600
 
-Error: 1.1035 <=> Params: (5, 0.001, 0.5)
+Params: (5, 0.001, 0.5) <=> Val error: 1.1035, Test error: 1.2797
 
 -------------
 
@@ -276,11 +279,11 @@ Final value of objective function: 0.3222
 Final value of gradient: 0.0000
 Number of function evaluations: 2193
 Number of gradient evaluations: 129
-Time for optimization: 0.3403 seconds
+Time for optimization: 0.4045 seconds
 Termination message: Optimization terminated successfully.
 Training error: 0.2824
 
-Error: 0.3206 <=> Params: (5, 0.001, 1)
+Params: (5, 0.001, 1) <=> Val error: 0.3206, Test error: 0.3044
 
 -------------
 
@@ -294,11 +297,11 @@ Final value of objective function: 0.3517
 Final value of gradient: 0.0000
 Number of function evaluations: 2006
 Number of gradient evaluations: 118
-Time for optimization: 0.3212 seconds
+Time for optimization: 0.3648 seconds
 Termination message: Optimization terminated successfully.
 Training error: 0.2918
 
-Error: 0.3228 <=> Params: (5, 0.001, 2)
+Params: (5, 0.001, 2) <=> Val error: 0.3228, Test error: 0.3682
 
 -------------
 
@@ -312,11 +315,11 @@ Final value of objective function: 2.1636
 Final value of gradient: 0.0000
 Number of function evaluations: 2975
 Number of gradient evaluations: 175
-Time for optimization: 0.5046 seconds
+Time for optimization: 0.5282 seconds
 Termination message: Optimization terminated successfully.
 Training error: 2.1584
 
-Error: 1.8590 <=> Params: (5, 0.0001, 0.25)
+Params: (5, 0.0001, 0.25) <=> Val error: 1.8590, Test error: 1.6301
 
 -------------
 
@@ -330,11 +333,11 @@ Final value of objective function: 1.5488
 Final value of gradient: 0.0000
 Number of function evaluations: 2363
 Number of gradient evaluations: 139
-Time for optimization: 0.3749 seconds
+Time for optimization: 0.4254 seconds
 Termination message: Optimization terminated successfully.
 Training error: 1.5410
 
-Error: 1.0715 <=> Params: (5, 0.0001, 0.5)
+Params: (5, 0.0001, 0.5) <=> Val error: 1.0715, Test error: 1.2775
 
 -------------
 
@@ -348,11 +351,11 @@ Final value of objective function: 1.5922
 Final value of gradient: 0.0000
 Number of function evaluations: 3468
 Number of gradient evaluations: 204
-Time for optimization: 0.5869 seconds
+Time for optimization: 0.6350 seconds
 Termination message: Optimization terminated successfully.
 Training error: 1.5822
 
-Error: 1.1577 <=> Params: (5, 0.0001, 1)
+Params: (5, 0.0001, 1) <=> Val error: 1.1577, Test error: 1.3004
 
 -------------
 
@@ -366,11 +369,11 @@ Final value of objective function: 0.3497
 Final value of gradient: 0.0000
 Number of function evaluations: 4267
 Number of gradient evaluations: 251
-Time for optimization: 0.6795 seconds
+Time for optimization: 0.7713 seconds
 Termination message: Optimization terminated successfully.
 Training error: 0.3432
 
-Error: 0.3461 <=> Params: (5, 0.0001, 2)
+Params: (5, 0.0001, 2) <=> Val error: 0.3461, Test error: 0.4559
 
 -------------
 
@@ -384,11 +387,11 @@ Final value of objective function: 1.8862
 Final value of gradient: 0.0000
 Number of function evaluations: 918
 Number of gradient evaluations: 54
-Time for optimization: 0.1562 seconds
+Time for optimization: 0.1612 seconds
 Termination message: Optimization terminated successfully.
 Training error: 1.8854
 
-Error: 1.5631 <=> Params: (5, 1e-05, 0.25)
+Params: (5, 1e-05, 0.25) <=> Val error: 1.5631, Test error: 1.5122
 
 -------------
 
@@ -402,11 +405,11 @@ Final value of objective function: 1.5409
 Final value of gradient: 0.0000
 Number of function evaluations: 2142
 Number of gradient evaluations: 126
-Time for optimization: 0.3208 seconds
+Time for optimization: 0.3782 seconds
 Termination message: Optimization terminated successfully.
 Training error: 1.5397
 
-Error: 1.0720 <=> Params: (5, 1e-05, 0.5)
+Params: (5, 1e-05, 0.5) <=> Val error: 1.0720, Test error: 1.2776
 
 -------------
 
@@ -420,11 +423,11 @@ Final value of objective function: 1.6042
 Final value of gradient: 0.0000
 Number of function evaluations: 3451
 Number of gradient evaluations: 203
-Time for optimization: 0.5334 seconds
+Time for optimization: 0.6211 seconds
 Termination message: Optimization terminated successfully.
 Training error: 1.6023
 
-Error: 1.1796 <=> Params: (5, 1e-05, 1)
+Params: (5, 1e-05, 1) <=> Val error: 1.1796, Test error: 1.3219
 
 -------------
 
@@ -438,11 +441,11 @@ Final value of objective function: 0.2618
 Final value of gradient: 0.0000
 Number of function evaluations: 3842
 Number of gradient evaluations: 226
-Time for optimization: 0.6265 seconds
+Time for optimization: 0.7399 seconds
 Termination message: Optimization terminated successfully.
 Training error: 0.2565
 
-Error: 0.3463 <=> Params: (5, 1e-05, 2)
+Params: (5, 1e-05, 2) <=> Val error: 0.3463, Test error: 0.3253
 
 -------------
 
@@ -456,11 +459,11 @@ Final value of objective function: 1.6383
 Final value of gradient: 0.0000
 Number of function evaluations: 5568
 Number of gradient evaluations: 174
-Time for optimization: 1.4948 seconds
+Time for optimization: 1.7508 seconds
 Termination message: Optimization terminated successfully.
 Training error: 1.5394
 
-Error: 1.2412 <=> Params: (10, 0.001, 0.25)
+Params: (10, 0.001, 0.25) <=> Val error: 1.2412, Test error: 1.2527
 
 -------------
 
@@ -474,11 +477,11 @@ Final value of objective function: 0.4385
 Final value of gradient: 0.0000
 Number of function evaluations: 9664
 Number of gradient evaluations: 302
-Time for optimization: 2.6774 seconds
+Time for optimization: 3.0038 seconds
 Termination message: Optimization terminated successfully.
 Training error: 0.3516
 
-Error: 0.2653 <=> Params: (10, 0.001, 0.5)
+Params: (10, 0.001, 0.5) <=> Val error: 0.2653, Test error: 0.3424
 
 -------------
 
@@ -492,11 +495,11 @@ Final value of objective function: 0.2284
 Final value of gradient: 0.0000
 Number of function evaluations: 9440
 Number of gradient evaluations: 295
-Time for optimization: 2.7240 seconds
+Time for optimization: 2.9975 seconds
 Termination message: Optimization terminated successfully.
 Training error: 0.1608
 
-Error: 0.2104 <=> Params: (10, 0.001, 1)
+Params: (10, 0.001, 1) <=> Val error: 0.2104, Test error: 0.1641
 
 -------------
 
@@ -510,11 +513,11 @@ Final value of objective function: 0.3434
 Final value of gradient: 0.0000
 Number of function evaluations: 10208
 Number of gradient evaluations: 319
-Time for optimization: 2.9441 seconds
+Time for optimization: 3.2890 seconds
 Termination message: Optimization terminated successfully.
 Training error: 0.2887
 
-Error: 0.3242 <=> Params: (10, 0.001, 2)
+Params: (10, 0.001, 2) <=> Val error: 0.3242, Test error: 0.3530
 
 -------------
 
@@ -528,11 +531,11 @@ Final value of objective function: 1.5855
 Final value of gradient: 0.0000
 Number of function evaluations: 5600
 Number of gradient evaluations: 175
-Time for optimization: 1.6068 seconds
+Time for optimization: 1.7617 seconds
 Termination message: Optimization terminated successfully.
 Training error: 1.5746
 
-Error: 1.2995 <=> Params: (10, 0.0001, 0.25)
+Params: (10, 0.0001, 0.25) <=> Val error: 1.2995, Test error: 1.3050
 
 -------------
 
@@ -546,11 +549,11 @@ Final value of objective function: 0.7324
 Final value of gradient: 0.0000
 Number of function evaluations: 8672
 Number of gradient evaluations: 271
-Time for optimization: 2.4356 seconds
+Time for optimization: 2.7805 seconds
 Termination message: Optimization terminated successfully.
 Training error: 0.7219
 
-Error: 0.3445 <=> Params: (10, 0.0001, 0.5)
+Params: (10, 0.0001, 0.5) <=> Val error: 0.3445, Test error: 0.6433
 
 -------------
 
@@ -564,11 +567,11 @@ Final value of objective function: 0.1515
 Final value of gradient: 0.0000
 Number of function evaluations: 10368
 Number of gradient evaluations: 324
-Time for optimization: 2.8519 seconds
+Time for optimization: 3.3504 seconds
 Termination message: Optimization terminated successfully.
 Training error: 0.1277
 
-Error: 0.1363 <=> Params: (10, 0.0001, 1)
+Params: (10, 0.0001, 1) <=> Val error: 0.1363, Test error: 0.1344
 
 -------------
 
@@ -582,11 +585,11 @@ Final value of objective function: 0.2695
 Final value of gradient: 0.0000
 Number of function evaluations: 11264
 Number of gradient evaluations: 352
-Time for optimization: 3.1563 seconds
+Time for optimization: 3.6539 seconds
 Termination message: Optimization terminated successfully.
 Training error: 0.2497
 
-Error: 0.3218 <=> Params: (10, 0.0001, 2)
+Params: (10, 0.0001, 2) <=> Val error: 0.3218, Test error: 0.3093
 
 -------------
 
@@ -600,11 +603,11 @@ Final value of objective function: 1.5572
 Final value of gradient: 0.0000
 Number of function evaluations: 7584
 Number of gradient evaluations: 237
-Time for optimization: 2.0338 seconds
+Time for optimization: 2.3706 seconds
 Termination message: Optimization terminated successfully.
 Training error: 1.5559
 
-Error: 1.1900 <=> Params: (10, 1e-05, 0.25)
+Params: (10, 1e-05, 0.25) <=> Val error: 1.1900, Test error: 1.3363
 
 -------------
 
@@ -618,11 +621,11 @@ Final value of objective function: 0.7212
 Final value of gradient: 0.0000
 Number of function evaluations: 10112
 Number of gradient evaluations: 316
-Time for optimization: 2.7627 seconds
+Time for optimization: 3.1529 seconds
 Termination message: Optimization terminated successfully.
 Training error: 0.7193
 
-Error: 0.3469 <=> Params: (10, 1e-05, 0.5)
+Params: (10, 1e-05, 0.5) <=> Val error: 0.3469, Test error: 0.6440
 
 -------------
 
@@ -636,11 +639,11 @@ Final value of objective function: 0.1131
 Final value of gradient: 0.0000
 Number of function evaluations: 20640
 Number of gradient evaluations: 645
-Time for optimization: 5.9270 seconds
+Time for optimization: 6.8484 seconds
 Termination message: Optimization terminated successfully.
 Training error: 0.1033
 
-Error: 0.1249 <=> Params: (10, 1e-05, 1)
+Params: (10, 1e-05, 1) <=> Val error: 0.1249, Test error: 0.0980
 
 -------------
 
@@ -654,11 +657,11 @@ Final value of objective function: 0.2293
 Final value of gradient: 0.0000
 Number of function evaluations: 31712
 Number of gradient evaluations: 991
-Time for optimization: 8.8215 seconds
+Time for optimization: 10.2175 seconds
 Termination message: Optimization terminated successfully.
 Training error: 0.2128
 
-Error: 0.2993 <=> Params: (10, 1e-05, 2)
+Params: (10, 1e-05, 2) <=> Val error: 0.2993, Test error: 0.2760
 
 -------------
 
@@ -672,11 +675,11 @@ Final value of objective function: 1.0601
 Final value of gradient: 0.0000
 Number of function evaluations: 28490
 Number of gradient evaluations: 370
-Time for optimization: 25.5916 seconds
+Time for optimization: 30.0819 seconds
 Termination message: Optimization terminated successfully.
 Training error: 0.9378
 
-Error: 0.9345 <=> Params: (25, 0.001, 0.25)
+Params: (25, 0.001, 0.25) <=> Val error: 0.9345, Test error: 0.7354
 
 -------------
 
@@ -690,11 +693,11 @@ Final value of objective function: 0.1502
 Final value of gradient: 0.0000
 Number of function evaluations: 29260
 Number of gradient evaluations: 380
-Time for optimization: 27.4157 seconds
+Time for optimization: 30.5356 seconds
 Termination message: Optimization terminated successfully.
 Training error: 0.0396
 
-Error: 0.0925 <=> Params: (25, 0.001, 0.5)
+Params: (25, 0.001, 0.5) <=> Val error: 0.0925, Test error: 0.0483
 
 -------------
 
@@ -708,11 +711,11 @@ Final value of objective function: 0.2216
 Final value of gradient: 0.0000
 Number of function evaluations: 25487
 Number of gradient evaluations: 331
-Time for optimization: 24.4850 seconds
+Time for optimization: 27.5895 seconds
 Termination message: Optimization terminated successfully.
 Training error: 0.1468
 
-Error: 0.1887 <=> Params: (25, 0.001, 1)
+Params: (25, 0.001, 1) <=> Val error: 0.1887, Test error: 0.1586
 
 -------------
 
@@ -726,11 +729,11 @@ Final value of objective function: 0.3428
 Final value of gradient: 0.0000
 Number of function evaluations: 27412
 Number of gradient evaluations: 356
-Time for optimization: 26.9484 seconds
+Time for optimization: 29.3202 seconds
 Termination message: Optimization terminated successfully.
 Training error: 0.2836
 
-Error: 0.3230 <=> Params: (25, 0.001, 2)
+Params: (25, 0.001, 2) <=> Val error: 0.3230, Test error: 0.3353
 
 -------------
 
@@ -744,11 +747,11 @@ Final value of objective function: 1.2028
 Final value of gradient: 0.0000
 Number of function evaluations: 33418
 Number of gradient evaluations: 434
-Time for optimization: 31.0576 seconds
+Time for optimization: 34.9799 seconds
 Termination message: Optimization terminated successfully.
 Training error: 1.1909
 
-Error: 0.9486 <=> Params: (25, 0.0001, 0.25)
+Params: (25, 0.0001, 0.25) <=> Val error: 0.9486, Test error: 1.0615
 
 -------------
 
@@ -762,11 +765,11 @@ Final value of objective function: 0.3552
 Final value of gradient: 0.0000
 Number of function evaluations: 26334
 Number of gradient evaluations: 342
-Time for optimization: 24.1386 seconds
+Time for optimization: 27.8325 seconds
 Termination message: Optimization terminated successfully.
 Training error: 0.3409
 
-Error: 0.2605 <=> Params: (25, 0.0001, 0.5)
+Params: (25, 0.0001, 0.5) <=> Val error: 0.2605, Test error: 0.3704
 
 -------------
 
@@ -780,11 +783,11 @@ Final value of objective function: 0.0714
 Final value of gradient: 0.0000
 Number of function evaluations: 133595
 Number of gradient evaluations: 1735
-Time for optimization: 125.6745 seconds
+Time for optimization: 143.7073 seconds
 Termination message: Optimization terminated successfully.
 Training error: 0.0339
 
-Error: 0.0714 <=> Params: (25, 0.0001, 1)
+Params: (25, 0.0001, 1) <=> Val error: 0.0714, Test error: 0.0516
 
 -------------
 
@@ -798,11 +801,11 @@ Final value of objective function: 0.2484
 Final value of gradient: 0.0000
 Number of function evaluations: 69993
 Number of gradient evaluations: 909
-Time for optimization: 65.3432 seconds
+Time for optimization: 74.7893 seconds
 Termination message: Optimization terminated successfully.
 Training error: 0.2262
 
-Error: 0.2998 <=> Params: (25, 0.0001, 2)
+Params: (25, 0.0001, 2) <=> Val error: 0.2998, Test error: 0.2705
 
 -------------
 
@@ -816,11 +819,11 @@ Final value of objective function: 1.5126
 Final value of gradient: 0.0000
 Number of function evaluations: 58135
 Number of gradient evaluations: 755
-Time for optimization: 52.6334 seconds
+Time for optimization: 61.0233 seconds
 Termination message: Optimization terminated successfully.
 Training error: 1.5115
 
-Error: 1.0914 <=> Params: (25, 1e-05, 0.25)
+Params: (25, 1e-05, 0.25) <=> Val error: 1.0914, Test error: 1.2190
 
 -------------
 
@@ -834,11 +837,11 @@ Final value of objective function: 0.0158
 Final value of gradient: 0.0000
 Number of function evaluations: 75383
 Number of gradient evaluations: 979
-Time for optimization: 68.2165 seconds
+Time for optimization: 79.2552 seconds
 Termination message: Optimization terminated successfully.
 Training error: 0.0127
 
-Error: 0.0359 <=> Params: (25, 1e-05, 0.5)
+Params: (25, 1e-05, 0.5) <=> Val error: 0.0359, Test error: 0.0145
 
 -------------
 
@@ -852,11 +855,11 @@ Final value of objective function: 0.0180
 Final value of gradient: 0.0000
 Number of function evaluations: 182952
 Number of gradient evaluations: 2376
-Time for optimization: 168.2563 seconds
+Time for optimization: 195.7540 seconds
 Termination message: Optimization terminated successfully.
 Training error: 0.0066
 
-Error: 0.0212 <=> Params: (25, 1e-05, 1)
+Params: (25, 1e-05, 1) <=> Val error: 0.0212, Test error: 0.0120
 
 -------------
 
@@ -870,11 +873,11 @@ Final value of objective function: 0.1987
 Final value of gradient: 0.0000
 Number of function evaluations: 242396
 Number of gradient evaluations: 3148
-Time for optimization: 219.9320 seconds
+Time for optimization: 260.3117 seconds
 Termination message: Optimization terminated successfully.
 Training error: 0.1752
 
-Error: 0.2626 <=> Params: (25, 1e-05, 2)
+Params: (25, 1e-05, 2) <=> Val error: 0.2626, Test error: 0.2051
 
 -------------
 
@@ -888,11 +891,11 @@ Final value of objective function: 0.2167
 Final value of gradient: 0.0000
 Number of function evaluations: 131024
 Number of gradient evaluations: 862
-Time for optimization: 223.3474 seconds
+Time for optimization: 266.3642 seconds
 Termination message: Optimization terminated successfully.
 Training error: 0.0351
 
-Error: 0.2799 <=> Params: (50, 0.001, 0.25)
+Params: (50, 0.001, 0.25) <=> Val error: 0.2799, Test error: 0.0717
 
 -------------
 
@@ -906,11 +909,11 @@ Final value of objective function: 0.1543
 Final value of gradient: 0.0000
 Number of function evaluations: 57912
 Number of gradient evaluations: 381
-Time for optimization: 99.3895 seconds
+Time for optimization: 117.8904 seconds
 Termination message: Optimization terminated successfully.
 Training error: 0.0391
 
-Error: 0.0851 <=> Params: (50, 0.001, 0.5)
+Params: (50, 0.001, 0.5) <=> Val error: 0.0851, Test error: 0.0469
 
 -------------
 
@@ -924,11 +927,11 @@ Final value of objective function: 0.2192
 Final value of gradient: 0.0000
 Number of function evaluations: 46968
 Number of gradient evaluations: 309
-Time for optimization: 86.3463 seconds
+Time for optimization: 97.7700 seconds
 Termination message: Optimization terminated successfully.
 Training error: 0.1475
 
-Error: 0.1868 <=> Params: (50, 0.001, 1)
+Params: (50, 0.001, 1) <=> Val error: 0.1868, Test error: 0.1542
 
 -------------
 
@@ -942,11 +945,11 @@ Final value of objective function: 0.3434
 Final value of gradient: 0.0000
 Number of function evaluations: 56544
 Number of gradient evaluations: 372
-Time for optimization: 100.3024 seconds
+Time for optimization: 117.6233 seconds
 Termination message: Optimization terminated successfully.
 Training error: 0.2815
 
-Error: 0.3220 <=> Params: (50, 0.001, 2)
+Params: (50, 0.001, 2) <=> Val error: 0.3220, Test error: 0.3303
 
 -------------
 
@@ -960,11 +963,11 @@ Final value of objective function: 0.0324
 Final value of gradient: 0.0000
 Number of function evaluations: 257944
 Number of gradient evaluations: 1697
-Time for optimization: 441.6664 seconds
+Time for optimization: 524.2163 seconds
 Termination message: Optimization terminated successfully.
 Training error: 0.0089
 
-Error: 0.1759 <=> Params: (50, 0.0001, 0.25)
+Params: (50, 0.0001, 0.25) <=> Val error: 0.1759, Test error: 0.0391
 
 -------------
 
@@ -978,11 +981,11 @@ Final value of objective function: 0.0354
 Final value of gradient: 0.0000
 Number of function evaluations: 67944
 Number of gradient evaluations: 447
-Time for optimization: 118.9416 seconds
+Time for optimization: 138.5107 seconds
 Termination message: Optimization terminated successfully.
 Training error: 0.0159
 
-Error: 0.0441 <=> Params: (50, 0.0001, 0.5)
+Params: (50, 0.0001, 0.5) <=> Val error: 0.0441, Test error: 0.0212
 
 -------------
 
@@ -996,11 +999,11 @@ Final value of objective function: 0.0675
 Final value of gradient: 0.0000
 Number of function evaluations: 96976
 Number of gradient evaluations: 638
-Time for optimization: 176.9509 seconds
+Time for optimization: 202.4841 seconds
 Termination message: Optimization terminated successfully.
 Training error: 0.0297
 
-Error: 0.0638 <=> Params: (50, 0.0001, 1)
+Params: (50, 0.0001, 1) <=> Val error: 0.0638, Test error: 0.0459
 
 -------------
 
@@ -1014,11 +1017,11 @@ Final value of objective function: 0.2469
 Final value of gradient: 0.0000
 Number of function evaluations: 143944
 Number of gradient evaluations: 947
-Time for optimization: 267.8365 seconds
+Time for optimization: 299.3657 seconds
 Termination message: Optimization terminated successfully.
 Training error: 0.2241
 
-Error: 0.3008 <=> Params: (50, 0.0001, 2)
+Params: (50, 0.0001, 2) <=> Val error: 0.3008, Test error: 0.2642
 
 -------------
 
@@ -1032,11 +1035,11 @@ Final value of objective function: 0.0210
 Final value of gradient: 0.0000
 Number of function evaluations: 250648
 Number of gradient evaluations: 1649
-Time for optimization: 462.2668 seconds
+Time for optimization: 509.9941 seconds
 Termination message: Optimization terminated successfully.
 Training error: 0.0183
 
-Error: 0.1464 <=> Params: (50, 1e-05, 0.25)
+Params: (50, 1e-05, 0.25) <=> Val error: 0.1464, Test error: 0.0564
 
 -------------
 
@@ -1050,11 +1053,11 @@ Final value of objective function: 0.0089
 Final value of gradient: 0.0000
 Number of function evaluations: 307496
 Number of gradient evaluations: 2023
-Time for optimization: 543.1120 seconds
+Time for optimization: 621.6575 seconds
 Termination message: Optimization terminated successfully.
 Training error: 0.0054
 
-Error: 0.0226 <=> Params: (50, 1e-05, 0.5)
+Params: (50, 1e-05, 0.5) <=> Val error: 0.0226, Test error: 0.0036
 
 -------------
 
@@ -1068,11 +1071,11 @@ Final value of objective function: 0.0140
 Final value of gradient: 0.0000
 Number of function evaluations: 678376
 Number of gradient evaluations: 4463
-Time for optimization: 1258.2613 seconds
+Time for optimization: 1407.9977 seconds
 Termination message: Optimization terminated successfully.
 Training error: 0.0045
 
-Error: 0.0132 <=> Params: (50, 1e-05, 1)
+Params: (50, 1e-05, 1) <=> Val error: 0.0132, Test error: 0.0092
 
 -------------
 
@@ -1086,14 +1089,12 @@ Final value of objective function: 0.1744
 Final value of gradient: 0.0000
 Number of function evaluations: 918384
 Number of gradient evaluations: 6042
-Time for optimization: 1733.9695 seconds
+Time for optimization: 1906.9561 seconds
 Termination message: Optimization terminated successfully.
 Training error: 0.1393
 
-Error: 0.2459 <=> Params: (50, 1e-05, 2)
+Params: (50, 1e-05, 2) <=> Val error: 0.2459, Test error: 0.1612
 
 -------------
 
 Best RBF params: (50, 1e-05, 1)
-
--------------
