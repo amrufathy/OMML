@@ -14,8 +14,7 @@
 - [Multilayer Perceptron Extreme Learning](https://github.com/amrufathy/OMML/blob/master/project1/run_21_unnamed.py)
 - [Radial Basis Function Extreme Learning](https://github.com/amrufathy/OMML/blob/master/project1/run_22_unnamed.py)
 
-- [Multilayer Perceptron Decomposition](https://github.com/amrufathy/OMML/blob/master/project1/run_31_unnamed.py)
-- [Radial Basis Function Network Decomposition](https://github.com/amrufathy/OMML/blob/master/project1/run_32_unnamed.py)
+- [Radial Basis Function Network Decomposition](https://github.com/amrufathy/OMML/blob/master/project1/run_3_unnamed.py)
 
 
 ## Neural Network (NN)
