@@ -9,6 +9,7 @@ import numpy as np
 import scipy.optimize as optimize
 # noinspection PyUnresolvedReferences
 from mpl_toolkits.mplot3d import Axes3D
+from sklearn.cluster import KMeans
 from sklearn.model_selection import train_test_split
 
 SEED = 1848399
@@ -59,7 +60,7 @@ class Network:
         ax = fig.gca(projection='3d')
         # noinspection PyPep8Naming
         X1, X2, Y = inputs[:, 0], inputs[:, 1], outputs.ravel()
-        # ax.scatter(X1, X2, Y, color="red", alpha=1)
+        ax.scatter(X1, X2, Y, color='red', alpha=1)
         ax.plot_trisurf(X1, X2, Y, cmap='viridis', edgecolor='none')
 
         ax.set_title(title)
@@ -95,12 +96,7 @@ class MLP(Network):
         self.__run_minimization(inputs, labels, omega)
 
     def decomposition(self, inputs, labels):
-        # TODO: implement Q3
-        # Hint: Alternate the optimization procedure between `V` and `W, b`
-        # Note: minimization of `V` is convex
-        #   minimization of `W, b` is non-convex
-        # Maybe helpful: https://scipy-lectures.org/advanced/mathematical_optimization/index.html
-        raise NotImplementedError
+        raise NotImplementedError('Decomposition method is not implemented for the MLP network!')
 
     def test_loss(self, inputs, labels):
         # only for use on val/test data, not during training
@@ -144,9 +140,9 @@ class MLP(Network):
         omega = np.load(filename)
         self.__unpack_omega(omega)
 
-    def surface_plot(self, inputs, *args):
+    def surface_plot(self, inputs, title='', *args):
         optimal_parameters = np.concatenate([self.V, self.W.reshape(self.W.size, 1), self.b.T])
-        super().surface_plot(inputs, optimal_parameters, 'MLP')
+        super().surface_plot(inputs, optimal_parameters, 'MLP' if title == '' else title)
 
     def __unpack_omega(self, omega):
         # `V` always exists
@@ -158,9 +154,6 @@ class MLP(Network):
 
 
 class RBF(Network):
-    # https://pythonmachinelearning.pro/using-neural-networks-for-regression-radial-basis-function-networks/
-    # (old lecture) http://users.diag.uniroma1.it/~palagi/didattica/sites/default/files/OMML_8th_lect_15-16_rbf.pdf
-
     def __init__(self, hidden_size, input_size=2, output_size=1, _rho=1e-4, _sigma=1.):
         # initialize weights and biases
         self.C = np.random.rand(input_size, hidden_size)
@@ -202,9 +195,38 @@ class RBF(Network):
         omega = self.V
         self.__run_minimization(inputs, labels, omega)
 
-    def decomposition(self, *args):
-        # TODO (Optional): implement decomposition for RBF
-        raise NotImplementedError('Decomposition method is not implemented for the RBF network!')
+    def decomposition(self, inputs, labels):
+        tik = time.time()
+        early_stopping_cond = 1e-5
+        sum_of_gradients, i, max_iters = 1, 0, 50
+
+        clusters = KMeans(n_clusters=self.hidden_size, random_state=SEED).fit(inputs)
+        self.C = np.array(clusters.cluster_centers_).T
+
+        omega = self.V
+
+        print(f'Initial training error: {self.test_loss(inputs, labels):.4f}')
+        print(f'Initial value of objective function: {self.loss(omega, inputs, labels):.4f}')
+
+        while sum_of_gradients > early_stopping_cond and i < max_iters:
+            # optimize V
+            omega = self.V
+            optimizer1 = self.__run_minimization(inputs, labels, omega)
+            gradient_1 = np.linalg.norm(optimizer1.jac.T)
+            self.V = optimizer1.x.reshape(*self.V.shape)
+
+            # optimize C
+            omega = self.C.reshape(self.C.size, 1)
+            optimizer2 = self.__run_minimization(inputs, labels, omega)
+            gradient_2 = np.linalg.norm(optimizer2.jac.T)
+            self.C = optimizer2.x.reshape(*self.C.shape)
+
+            sum_of_gradients = gradient_1 + gradient_2
+            i += 1
+
+        tok = time.time()
+
+        self.__print_training_info(inputs, labels, optimizer2, tok - tik)
 
     def __run_minimization(self, inputs, labels, omega):
         # initial error
@@ -218,6 +240,8 @@ class RBF(Network):
         # print out required info
         self.__print_training_info(inputs, labels, optimal, tok - tik)
 
+        return optimal
+
     def __print_training_info(self, inputs, labels, result, elapsed_time):
         print(f'Number of neurons: {self.hidden_size}')
         print(f'Value of sigma: {1}')
@@ -225,11 +249,12 @@ class RBF(Network):
         print(f'Solver: BFGS (Default)')
         print(f'Final value of objective function: {result.fun:.4f}')
         print(f'Final value of gradient: {np.linalg.norm(result.jac):.4f}')
+        print(f'Number of iterations: {result.nit}')
         print(f'Number of function evaluations: {result.nfev}')
         print(f'Number of gradient evaluations: {result.njev}')
         print(f'Time for optimization: {elapsed_time:.4f} seconds')
         print(f'Termination message: {result.message}')
-        print(f'Training error: {self.test_loss(inputs, labels):.4f}')
+        print(f'Final Training error: {self.test_loss(inputs, labels):.4f}')
 
     def test_loss(self, inputs, labels):
         # only for use on val/test data, not during training
@@ -247,15 +272,18 @@ class RBF(Network):
         omega = np.load(filename)
         self.__unpack_omega(omega)
 
-    def surface_plot(self, inputs, *args):
+    def surface_plot(self, inputs, title='', *args):
         optimal_parameters = np.concatenate([self.V, self.C.reshape(self.C.size, 1)])
-        super().surface_plot(inputs, optimal_parameters, 'RBF')
+        super().surface_plot(inputs, optimal_parameters, 'RBF' if title == '' else title)
 
     def __unpack_omega(self, omega):
-        # `V` always exists
-        self.V = omega[:self.V.size].reshape(*self.V.shape)
-        # if `C` is in omega, unpack it (full minimization)
-        if omega.size > self.V.size:
+        # check omega size
+        if omega.size == self.V.size:
+            self.V = omega[:self.V.size].reshape(*self.V.shape)
+        elif omega.size == self.C.size:
+            self.C = omega[:self.C.size].reshape(*self.C.shape)
+        else:
+            self.V = omega[:self.V.size].reshape(*self.V.shape)
             self.C = omega[self.V.size:].reshape(*self.C.shape)
 
 
@@ -334,10 +362,11 @@ if __name__ == '__main__':
     # grid_search()
 
     # Train & Save best params
-    mlp = MLP(hidden_size=25, _rho=1e-5)
-    mlp.fit(x, y)  # train on all points for best performance
-    mlp.save()
+    # Best params
+    # MLP: (25, 1e-5)
+    # RBF: (25, 1e-5, 1)
 
     rbf = RBF(hidden_size=25, _rho=1e-5, _sigma=1)
-    rbf.fit(x, y)
-    rbf.save()
+    rbf.decomposition(x, y)
+    rbf.surface_plot(x, title='RBF - Decomposition')
+    print(f'Test error: {rbf.test_loss(x_test, y_test):.4f}')
