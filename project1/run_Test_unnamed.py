@@ -1,6 +1,6 @@
 import numpy as np
 
-from .models import MLP
+from models import MLP
 
 dataset = np.genfromtxt('dataPointsTest.csv', delimiter=',')
 
