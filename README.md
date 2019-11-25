@@ -1,17 +1,28 @@
 # OMML
 
 - Implementing NN, MLP, RBF from scratch using only `numpy` & `scipy`
+- Data can be found at projet1/data_points.csv
 
 ## Implementation
 
 - to install the requirements to run the Project, use `pip install -r requirements.txt`
 - To run the code `python3 ommml/project1/run_xx_unnamed.py` the xx belongs to set of questions provided in the project {11, 12, 21, 22, 31, 32}
+- Created [`models.py`](https://github.com/amrufathy/OMML/blob/master/project1/models.py), it contains definition of NeuralNetwork, MultiLayerPerceptron, RadialBasisFunctionNetwork
+- [Multilayer Perceptron Training](https://github.com/amrufathy/OMML/blob/master/project1/run_11_unnamed.py)
+- [Radial Basis Function Network Training](https://github.com/amrufathy/OMML/blob/master/project1/run_12_unnamed.py)
+
+- [Multilayer Perceptron Extreme Learning](https://github.com/amrufathy/OMML/blob/master/project1/run_21_unnamed.py)
+- [Radial Basis Function Extreme Learning](https://github.com/amrufathy/OMML/blob/master/project1/run_22_unnamed.py)
+
+- [Multilayer Perceptron Decomposition](https://github.com/amrufathy/OMML/blob/master/project1/run_31_unnamed.py)
+- [Radial Basis Function Network Decomposition](https://github.com/amrufathy/OMML/blob/master/project1/run_32_unnamed.py)
+
 
 ## Neural Network (NN)
 
 - What is a Neural Network? it is an Artificial Network that tries to mimic the human's brain neurons, it is made up of 3 layers input layer where it receives the input and pass it to the 2nd layer which is the hidden layer, and the sum of weights as per number of neurons is added with the biases to give us our output.
 
-- It is characterized by the following parameters `{input_size, hidden_size, output_size, rho}
+- It is characterized by the following parameters `{input_size, hidden_size, output_size, rho}`
 
 
 ## MultiLayer Perceptron (MLP)
