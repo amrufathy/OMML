@@ -366,7 +366,6 @@ if __name__ == '__main__':
     # MLP: (25, 1e-5)
     # RBF: (25, 1e-5, 1)
 
-    rbf = RBF(hidden_size=25, _rho=1e-5, _sigma=1)
-    rbf.decomposition(x, y)
-    rbf.surface_plot(x, title='RBF - Decomposition')
-    print(f'Test error: {rbf.test_loss(x_test, y_test):.4f}')
+    mlp = MLP(hidden_size=25, _rho=1e-5)
+    mlp.fit(x, y)
+    mlp.save()
