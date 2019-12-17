@@ -5,3 +5,9 @@
 *.npy
 
 */__pycache__/*
+
+# vscode files
+.vscode
+
+# Data folder
+project2/Data/
