@@ -1,12 +1,12 @@
 import logging
-import time
 import os
+import time
 
 import numpy as np
 from cvxopt import matrix, solvers
+from utils import initialize_logger
 
 from data_extraction import load_mnist
-from utils import initialize_logger
 
 
 class SVMDecomposition(object):
@@ -34,8 +34,8 @@ class SVMDecomposition(object):
         self.hessian_mat = y.dot(self.hessian_mat).dot(y)
 
     def objective_function(self):
-        F = 0.5 * self.lambda_star.T.dot(self.hessian_mat).dot(
-            self.lambda_star) + self.e.T.dot(self.lambda_star)
+        F = (self.lambda_star.T.dot(self.hessian_mat).dot(
+            self.lambda_star))/2.0 + self.e.T.dot(self.lambda_star)
         return F[0][0]
 
     def update_gradient(self, lambda_k1, lambda_k2, working_set):
@@ -43,11 +43,11 @@ class SVMDecomposition(object):
         delta_lambda = lambda_k1[working_set] - lambda_k2[working_set]
         return hessian_mat_w_cols.dot(delta_lambda)  # delta_gradient
 
-    def predict(self, train_x):
+    def predict(self, data_x):
         threshold = 0
         for i, sample in enumerate(self.train_x):
             threshold += self.lambda_star[i] * \
-                self.train_y[i] * self.rbf_kernel(sample, x)
+                self.train_y[i] * self.rbf_kernel(sample, data_x)
         return np.sign(threshold + self.bias)
 
     def acc(self, test_x, test_y):
@@ -118,12 +118,13 @@ class SVMDecomposition(object):
 
             R, S = sorted(l_plus + u_minus + f), sorted(l_minus + u_plus + f),
 
-            m_lambda, M_lambda = round(grad_y[R].max(), 3), round(grad_y[S].min(), 3)
+            m_lambda, M_lambda = round(
+                grad_y[R].max(), 3), round(grad_y[S].min(), 3)
 
             if m_lambda <= M_lambda:
-                logging.info(f"m_diff: {m_lambda - M_lambda}")
                 logging.info(
-                    "Optimization terminated successfully, by reaching K.K.T point.")
+                    f"m - M = {m_lambda - M_lambda}, Optimization terminated successfully, by reaching K.K.T point.")
+                break
             else:
                 max_grad_y_R = (grad_y[R].ravel()).argsort()[:][::-1]
                 min_grad_y_S = (grad_y[S].ravel()).argsort()[:]
@@ -142,8 +143,8 @@ class SVMDecomposition(object):
                 evaluations += num_eval
                 iterations += 1
         tok = time.time()
-        computational_time = tik - tok
-        self.lambda_start = lambda_
+        computational_time = tok - tik
+        self.lambda_star = lambda_
         support_vector_idx = lambda_.argmax()
         bias_x = self.train_x[support_vector_idx]
         bias_y = self.train_y[support_vector_idx]
@@ -152,19 +153,20 @@ class SVMDecomposition(object):
         acc_test = self.acc(self.test_x, self.test_y)
         obj_val = self.objective_function()
         if print_info:
-            self._log_info(acc_train, acc_test, obj_value,
+            self._log_info(acc_train, acc_test, obj_val,
                            iterations, computational_time)
 
         return (lambda_, acc_train, acc_test, obj_val,
                 evaluations, iterations, computational_time)
 
     def _log_info(self, acc_train, acc_test, obj_value, iterations, comp_time):
+        print('----'*5)
         logging.info(f"C: {self.C}")
         logging.info(f"gamma: {self.gamma}")
-        logging.info(f"Final val of objective function: {obj_value}")
-        logging.info(f"Train acc: {acc_train*100}%")
-        logging.info(f"Test acc: {acc_test*100}%")
-        logging.info(f"Time to find KKT point: {comp_time}")
+        logging.info(f"Final val of objective function: {obj_value:.5f}")
+        logging.info(f"Train acc: {acc_train*100:.4f}%")
+        logging.info(f"Test acc: {acc_test*100:.4f}%")
+        logging.info(f"Time to find KKT point: {comp_time:.4f} seconds")
         logging.info(f"Function evaluations: {iterations}")
         logging.info(f"Gradient evaluations: {iterations}")
 
