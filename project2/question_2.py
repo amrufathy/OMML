@@ -11,10 +11,12 @@ from data_extraction import load_mnist
 
 class SVMDecomposition(object):
     def __init__(self, C=1.0, gamma=0.3):
+        initialize_logger()
         self.C = C
         self.gamma = gamma
-        self.train_x, self.train_y, self.test_x, self.test_y = load_mnist(
-            os.path.join(os.getcwd(), 'project2', 'Data'), kind='train')
+        data_path = os.path.join(os.getcwd(), 'project2', 'Data')
+        self.train_x, self.train_y, self.test_x, self.test_y = load_mnist(data_path, kind='train')
+        logging.info(f'Dataset is loaded from {data_path}')
         self.bias = 0
         self.hessian_mat = np.zeros(shape=(self.train_y.shape[0],
                                            self.train_y.shape[0]))
@@ -95,6 +97,7 @@ class SVMDecomposition(object):
         self.initialize_hessian_mat()
         gradient = np.copy(self.e)
         tik = time.time()
+        logging.info("Optimization process started. \n")
         while True:
             lambda_k = np.copy(lambda_)
             grad_y = -gradient/train_y_
@@ -142,6 +145,7 @@ class SVMDecomposition(object):
                 gradient += delta_grad
                 evaluations += num_eval
                 iterations += 1
+        logging.info("Optimization done. \n")
         tok = time.time()
         computational_time = tok - tik
         self.lambda_star = lambda_
@@ -160,7 +164,7 @@ class SVMDecomposition(object):
                 evaluations, iterations, computational_time)
 
     def _log_info(self, acc_train, acc_test, obj_value, iterations, comp_time):
-        print('----'*5)
+        print('--------------------\n')
         logging.info(f"C: {self.C}")
         logging.info(f"gamma: {self.gamma}")
         logging.info(f"Final val of objective function: {obj_value:.5f}")
@@ -172,8 +176,6 @@ class SVMDecomposition(object):
 
 
 if __name__ == '__main__':
-    initialize_logger()
-
     svm_decomposition = SVMDecomposition()
     num_points = len(svm_decomposition.train_y)
     lambda_ = np.zeros((num_points, 1))
