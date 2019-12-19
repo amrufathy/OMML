@@ -60,7 +60,7 @@ def load_mnist(path, kind='train'):
     y_label2 = y_label2 / 2.0
     y_label4 = y_label4 / -4.0
 
-    x_label_24 = np.concatenate((x_label2, x_label4))
+    x_label_24 = np.vstack((x_label2, x_label4))
     y_label_24 = np.concatenate((y_label2, y_label4))
 
     x_train24, x_test24, y_train24, y_test24 = train_test_split(

@@ -1,5 +1,6 @@
 import logging
 import time
+import os
 
 import numpy as np
 from cvxopt import matrix, solvers
@@ -9,19 +10,19 @@ from utils import initialize_logger
 
 
 class SVMDecomposition(object):
-    def __init__(self, train_x, train_y, C=1.0, gamma=0.3):
+    def __init__(self, C=1.0, gamma=0.3):
         self.C = C
         self.gamma = gamma
-        self.train_x = train_x
-        self.train_y = train_y
+        self.train_x, self.train_y, self.test_x, self.test_y = load_mnist(
+            os.path.join(os.getcwd(), 'project2', 'Data'), kind='train')
         self.bias = 0
         self.hessian_mat = np.zeros(shape=(self.train_y.shape[0],
-                                           self.train_y.shape[1]))
+                                           self.train_y.shape[0]))
         self.e = -1. * np.ones(shape=(self.train_y.shape[0], 1))
         self.lambda_star = None
 
     def rbf_kernel(self, xi, xj):
-        return np.exp(-self.gamma * np.linalg.norm(xi - xj) ** 2)
+        return np.exp((-1. * self.gamma) * np.power(np.linalg.norm(xi - xj), 2))
 
     def initialize_hessian_mat(self):
         dim = self.train_y.shape[0]
@@ -88,7 +89,7 @@ class SVMDecomposition(object):
         res = solvers.qp(P, c, G, h, A, b)
         return np.array(res.get('x')), res.get('iterations')
 
-    def optimize(self, lambda_, q, test_x, test_y, print_info=True):
+    def optimize(self, lambda_, q, print_info=True):
         train_y_ = self.train_y.reshape(len(self.train_y), 1)
         iterations, evaluations = 0, 0
         self.initialize_hessian_mat()
@@ -104,7 +105,7 @@ class SVMDecomposition(object):
                 self.C - epsillon), lambda_ <= self.C)
 
             l_plus_cond, l_minus_cond = np.logical_and(
-                lambda_u, train_y_ == 1), np.logical_and(lambda_l, train_y_ == -1)
+                lambda_l, train_y_ == 1), np.logical_and(lambda_l, train_y_ == -1)
             l_plus, l_minus = list(idx[l_plus_cond]), list(idx[l_minus_cond])
 
             u_plus_cond, u_minus_cond = np.logical_and(
@@ -117,8 +118,8 @@ class SVMDecomposition(object):
 
             R, S = sorted(l_plus + u_minus + f), sorted(l_minus + u_plus + f),
 
-            m_lambda, M_lambda = round(
-                grad_y[R].max(), 3), round(grad_y[S].min(), 3)
+            m_lambda, M_lambda = round(grad_y[R].max(), 3), round(grad_y[S].min(), 3)
+
             if m_lambda <= M_lambda:
                 logging.info(f"m_diff: {m_lambda - M_lambda}")
                 logging.info(
@@ -148,7 +149,7 @@ class SVMDecomposition(object):
         bias_y = self.train_y[support_vector_idx]
         self.bias = (1 - bias_y * self.predict(bias_x))/bias_y
         acc_train = self.acc(self.train_x, self.train_y)
-        acc_test = self.acc(test_x, test_y)
+        acc_test = self.acc(self.test_x, self.test_y)
         obj_val = self.objective_function()
         if print_info:
             self._log_info(acc_train, acc_test, obj_value,
@@ -171,17 +172,12 @@ class SVMDecomposition(object):
 if __name__ == '__main__':
     initialize_logger()
 
-    train_x, test_x, train_y, test_y = load_mnist('Data', kind='train')
-
-    num_points = len(train_y)
+    svm_decomposition = SVMDecomposition()
+    num_points = len(svm_decomposition.train_y)
     lambda_ = np.zeros((num_points, 1))
     q = 100
 
-    svm_decomposition = SVMDecomposition(train_x, train_y)
-    # TODO: ADD LOAD DATASET INSIDE THE CLASS
-    # FIXME: Reshaping error
     (lambda_, acc_train, acc_test,
      obj_value, evaluations,
      iterations, comp_time) = svm_decomposition.optimize(lambda_, q,
-                                                         test_x, test_y,
                                                          print_info=True)
