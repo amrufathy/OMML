@@ -4,9 +4,8 @@ import time
 
 import numpy as np
 from cvxopt import matrix, solvers
-from utils import initialize_logger
-
 from data_extraction import load_mnist
+from utils import initialize_logger
 
 
 class SVMDecomposition(object):
@@ -14,7 +13,7 @@ class SVMDecomposition(object):
         initialize_logger()
         self.C = C
         self.gamma = gamma
-        data_path = os.path.join(os.getcwd(), 'project2', 'Data')
+        data_path = os.path.join(os.getcwd(), 'Data')
         self.train_x, self.train_y, self.test_x, self.test_y = load_mnist(data_path, kind='train')
         logging.info(f'Dataset is loaded from {data_path}')
         self.bias = 0
@@ -37,7 +36,7 @@ class SVMDecomposition(object):
 
     def objective_function(self):
         F = (self.lambda_star.T.dot(self.hessian_mat).dot(
-            self.lambda_star))/2.0 + self.e.T.dot(self.lambda_star)
+            self.lambda_star)) / 2.0 + self.e.T.dot(self.lambda_star)
         return F[0][0]
 
     def update_gradient(self, lambda_k1, lambda_k2, working_set):
@@ -49,7 +48,7 @@ class SVMDecomposition(object):
         threshold = 0
         for i, sample in enumerate(self.train_x):
             threshold += self.lambda_star[i] * \
-                self.train_y[i] * self.rbf_kernel(sample, data_x)
+                         self.train_y[i] * self.rbf_kernel(sample, data_x)
         return np.sign(threshold + self.bias)
 
     def acc(self, test_x, test_y):
@@ -59,7 +58,7 @@ class SVMDecomposition(object):
             y_hat = self.predict(test_x[i])
             if y_hat * label > 0:
                 correctly_classified += 1
-        return correctly_classified/data_len
+        return correctly_classified / data_len
 
     def build_mat(self, working_set, not_working_set, lambda_):
         train_y = self.train_y.reshape(len(self.train_y), 1)
@@ -80,9 +79,9 @@ class SVMDecomposition(object):
                               np.eye(y_w.shape[0]))),
                    tc='d')
         h = matrix(np.hstack((np.zeros(y_w.shape[0]),
-                              self.C*np.ones(y_w.shape[0]))),
+                              self.C * np.ones(y_w.shape[0]))),
                    tc='d')
-        return (P, c, G, h, A, b)
+        return P, c, G, h, A, b
 
     def qp_solver(self, working_set, not_working_set, lambda_):
         (P, c, G, h, A, b) = self.build_mat(working_set,
@@ -100,12 +99,12 @@ class SVMDecomposition(object):
         logging.info("Optimization process started. \n")
         while True:
             lambda_k = np.copy(lambda_)
-            grad_y = -gradient/train_y_
+            grad_y = -gradient / train_y_
             idx = np.arange(0, len(train_y_)).reshape((len(train_y_), 1))
             epsillon = 1e-5
             lambda_l = lambda_ <= epsillon
             lambda_u = np.logical_and(lambda_ >= (
-                self.C - epsillon), lambda_ <= self.C)
+                    self.C - epsillon), lambda_ <= self.C)
 
             l_plus_cond, l_minus_cond = np.logical_and(
                 lambda_l, train_y_ == 1), np.logical_and(lambda_l, train_y_ == -1)
@@ -132,7 +131,7 @@ class SVMDecomposition(object):
                 max_grad_y_R = (grad_y[R].ravel()).argsort()[:][::-1]
                 min_grad_y_S = (grad_y[S].ravel()).argsort()[:]
                 max_grad_y, min_grad_y = max_grad_y_R[0:int(
-                    q/2)], min_grad_y_S[0:int(q/2)]
+                    q / 2)], min_grad_y_S[0:int(q / 2)]
                 I, J = [R[i] for i in max_grad_y], [S[j] for j in min_grad_y]
                 working_set = I + J
                 idx_set = list(idx.ravel())
@@ -152,7 +151,7 @@ class SVMDecomposition(object):
         support_vector_idx = lambda_.argmax()
         bias_x = self.train_x[support_vector_idx]
         bias_y = self.train_y[support_vector_idx]
-        self.bias = (1 - bias_y * self.predict(bias_x))/bias_y
+        self.bias = (1 - bias_y * self.predict(bias_x)) / bias_y
         acc_train = self.acc(self.train_x, self.train_y)
         acc_test = self.acc(self.test_x, self.test_y)
         obj_val = self.objective_function()
@@ -168,8 +167,8 @@ class SVMDecomposition(object):
         logging.info(f"C: {self.C}")
         logging.info(f"gamma: {self.gamma}")
         logging.info(f"Final val of objective function: {obj_value:.5f}")
-        logging.info(f"Train acc: {acc_train*100:.4f}%")
-        logging.info(f"Test acc: {acc_test*100:.4f}%")
+        logging.info(f"Train acc: {acc_train * 100:.4f}%")
+        logging.info(f"Test acc: {acc_test * 100:.4f}%")
         logging.info(f"Time to find KKT point: {comp_time:.4f} seconds")
         logging.info(f"Function evaluations: {iterations}")
         logging.info(f"Gradient evaluations: {iterations}")
