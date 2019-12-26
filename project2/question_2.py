@@ -13,9 +13,9 @@ class SVMDecomposition(object):
         initialize_logger()
         self.C = C
         self.gamma = gamma
-        data_path = os.path.join(os.getcwd(), 'Data')
+        data_path = os.path.join(os.getcwd(), 'project2', 'Data')
         self.train_x, self.train_y, self.test_x, self.test_y = load_mnist(data_path, kind='train')
-        logging.info(f'Dataset is loaded from {data_path}')
+        logging.info('Dataset is loaded.')
         self.bias = 0
         self.hessian_mat = np.zeros(shape=(self.train_y.shape[0],
                                            self.train_y.shape[0]))
