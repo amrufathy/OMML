@@ -11,8 +11,8 @@ class SVMMVP(SVMDecomposition):
         super().__init__(C, gamma)
 
     def optimize(self, lambda_, print_info=True):
-        self.initialize_hessian_mat()
         train_y_ = self.train_y.reshape(len(self.train_y), 1)
+        self.initialize_hessian_mat()
         iterations = 0
         gradient = np.copy(self.e)
         tik = time.time()
@@ -73,7 +73,7 @@ class SVMMVP(SVMDecomposition):
         logging.info("Optimization done.")
         tok = time.time()
         computational_time = tok - tik
-        self.lamda_star = lambda_
+        self.lambda_star = lambda_
         support_vector_idx = lambda_.argmax()
         bias_x = self.train_x[support_vector_idx]
         bias_y = self.train_y[support_vector_idx]
