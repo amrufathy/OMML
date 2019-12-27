@@ -139,7 +139,9 @@ def SVM_prediction(x_train, y_train, rbf_gamma, C, x_test, y_test, test=True):
     tok = time.time()
     computational_time = tok - tik
     if test==True:
-        print('QP COMPUTATIONAL TIME: ', np.round(computational_time,2), ' SEC')
+        file = open('question_1.log', mode='w+')
+        print(f'QP COMPUTATIONAL TIME: {np.round(computational_time,2)} SEC', file=file)
+        file.close()
     # print('QPsolution:', QPsolution)
     lambda_vector = np.array(QPsolution['x'])
     # filtering lambda vector is striclty positive (1e-7 is counted as 0)

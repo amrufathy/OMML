@@ -7,7 +7,7 @@ from question_2 import SVMDecomposition
 
 
 class SVMMVP(SVMDecomposition):
-    def __init__(self, C=1.0, gamma=0.3):
+    def __init__(self, C=100, gamma=0.001):
         super().__init__(C, gamma)
 
     def optimize(self, lambda_, print_info=True):

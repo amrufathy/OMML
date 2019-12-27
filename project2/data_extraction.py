@@ -1,19 +1,16 @@
 import gzip
 import os
-import random
 
 import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
-SEED = 1848399
-random.seed(SEED)
-np.random.seed(SEED)
 
+SEED = 1848399
 
 def load_mnist(path, kind='train'):
     """
-    Load MNIST data from `path`
+    Load MNIST (2 classes) data from parameter path
         @author: marco
         @ date: Sun Nov 24 11:23:09 2019
     """

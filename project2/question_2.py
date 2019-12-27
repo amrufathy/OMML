@@ -9,12 +9,13 @@ from utils import initialize_logger
 
 
 class SVMDecomposition(object):
-    def __init__(self, C=1.0, gamma=0.3):
+    def __init__(self, C=10, gamma=0.3):
         initialize_logger()
         self.C = C
         self.gamma = gamma
         data_path = os.path.join(os.getcwd(), 'project2', 'Data')
-        self.train_x, self.train_y, self.test_x, self.test_y = load_mnist(data_path, kind='train')
+        self.train_x, self.train_y, self.test_x, self.test_y = load_mnist(
+            data_path, kind='train')
         logging.info('Dataset is loaded.')
         self.bias = 0
         self.hessian_mat = np.zeros(shape=(self.train_y.shape[0],
@@ -48,7 +49,7 @@ class SVMDecomposition(object):
         threshold = 0
         for i, sample in enumerate(self.train_x):
             threshold += self.lambda_star[i] * \
-                         self.train_y[i] * self.rbf_kernel(sample, data_x)
+                self.train_y[i] * self.rbf_kernel(sample, data_x)
         return np.sign(threshold + self.bias)
 
     def acc(self, test_x, test_y):
@@ -84,10 +85,8 @@ class SVMDecomposition(object):
         return P, c, G, h, A, b
 
     def qp_solver(self, working_set, not_working_set, lambda_):
-        (P, c, G, h, A, b) = self.build_mat(working_set,
-                                            not_working_set,
-                                            lambda_)
-        res = solvers.qp(P, c, G, h, A, b)
+        locals = self.build_mat(working_set, not_working_set, lambda_)
+        res = solvers.qp(*locals)
         return np.array(res.get('x')), res.get('iterations')
 
     def optimize(self, lambda_, q, print_info=True):
@@ -101,13 +100,11 @@ class SVMDecomposition(object):
             lambda_k = np.copy(lambda_)
             grad_y = -gradient / train_y_
             idx = np.arange(0, len(train_y_)).reshape((len(train_y_), 1))
-            epsillon = 1e-5
+            epsillon = 1e-7
             lambda_l = lambda_ <= epsillon
-            lambda_u = np.logical_and(lambda_ >= (
-                    self.C - epsillon), lambda_ <= self.C)
+            lambda_u = np.logical_and(lambda_ >= (self.C - epsillon), lambda_ <= self.C)
 
-            l_plus_cond, l_minus_cond = np.logical_and(
-                lambda_l, train_y_ == 1), np.logical_and(lambda_l, train_y_ == -1)
+            l_plus_cond, l_minus_cond = np.logical_and(lambda_l, train_y_ == 1), np.logical_and(lambda_l, train_y_ == -1)
             l_plus, l_minus = list(idx[l_plus_cond]), list(idx[l_minus_cond])
 
             u_plus_cond, u_minus_cond = np.logical_and(
@@ -118,7 +115,7 @@ class SVMDecomposition(object):
                                     lambda_ < (self.C - epsillon))
             f = list(idx[f_cond])
 
-            R, S = sorted(l_plus + u_minus + f), sorted(l_minus + u_plus + f),
+            R, S = sorted(l_plus + u_minus + f), sorted(l_minus + u_plus + f)
 
             m_lambda, M_lambda = round(
                 grad_y[R].max(), 3), round(grad_y[S].min(), 3)
@@ -163,7 +160,7 @@ class SVMDecomposition(object):
                 evaluations, iterations, computational_time)
 
     def _log_info(self, acc_train, acc_test, obj_value, iterations, comp_time):
-        print('--------------------\n')
+        print('\n--------------------\n')
         logging.info(f"C: {self.C}")
         logging.info(f"gamma: {self.gamma}")
         logging.info(f"Final val of objective function: {obj_value:.5f}")
@@ -180,7 +177,4 @@ if __name__ == '__main__':
     lambda_ = np.zeros((num_points, 1))
     q = 100
 
-    (lambda_, acc_train, acc_test,
-     obj_value, evaluations,
-     iterations, comp_time) = svm_decomposition.optimize(lambda_, q,
-                                                         print_info=True)
+    svm_decomposition.optimize(lambda_, q)

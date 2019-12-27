@@ -10,6 +10,7 @@ from sklearn.metrics import accuracy_score, confusion_matrix
 from sklearn.metrics.pairwise import rbf_kernel
 from sklearn.utils import shuffle
 
+
 data_path = os.path.join(os.getcwd(), 'Data')
 
 x_train24, y_train24, x_test24, y_test24 = load_mnist(data_path, kind='train')
