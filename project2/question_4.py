@@ -159,13 +159,13 @@ class SVMMultiClassClassifier:
                              self.ground_truth, self.train_len)
 
         _, margin_test2 = self.predict(opt_alpha1, self.test_x,
-                                       self.train_x, self.train_y2,
+                                       self.test_x, self.train_y2,
                                        self.p_poly, opt_b)
         _, margin_test4 = self.predict(opt_alpha2, self.test_x,
                                        self.train_x, self.train_y4,
                                        self.p_poly, opt_b4)
         _, margin_test6 = self.predict(opt_alpha6, self.test_x,
-                                       self.train_x, self.train_y6,
+                                       self.train_x, self.train_y2,
                                        self.p_poly, opt_b6)
 
         max_distance_test = np.argmax([margin_test2,
@@ -179,14 +179,14 @@ class SVMMultiClassClassifier:
         computation_time = tok - tik
 
         if print_info:
-            self._log_info(self.p_poly, acc_train, acc_test,
-                           fun_2+fun_4+fun_6,
-                           iteration_2+iteration_4+iteration_6,
-                           computation_time)
+            self.log_info(self.p_poly, acc_train, acc_test,
+                          fun_2+fun_4+fun_6,
+                          iteration_2+iteration_4+iteration_6,
+                          computation_time)
 
-    def predict(self, lamda, x1, x2, y, p, b):
+    def predict(self, lambda_, x1, x2, y, p, b):
         k = self.poly_kernel(x2, x1, p)
-        return np.sign(np.dot(lamda * y, k) + b), np.dot(lamda * y, k) + b
+        return np.sign(np.dot(lambda_ * y, k) + b), np.dot(lambda_ * y, k) + b
 
     def acc(self, y_hat, labels, num_samples):
         acc = 0
@@ -201,7 +201,7 @@ class SVMMultiClassClassifier:
         logging.info(f"Final val of objective function: {obj_value:.5f}")
         logging.info(f"Train acc: {acc_train * 100:.4f}%")
         logging.info(f"Test acc: {acc_test * 100:.4f}%")
-        logging.info(f"Time to find KKT point: {comp_time:.4f} seconds")
+        logging.info(f"Time to find KKT point: {time_:.4f} seconds")
         logging.info(f"Function evaluations: {iterations}")
 
 
