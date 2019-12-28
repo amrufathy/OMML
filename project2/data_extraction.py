@@ -72,4 +72,4 @@ def load_mnist(path, kind='train'):
 
 
 if __name__ == "__main__":
-    train_x, train_y, test_x, test_y = load_mnist('Data', kind='train')
+    train_x, train_y, test_x, test_y = load_mnist('project2/Data', kind='train')

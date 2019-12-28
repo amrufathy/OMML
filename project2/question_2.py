@@ -9,13 +9,14 @@ from utils import initialize_logger
 
 
 class SVMDecomposition(object):
-    def __init__(self, C=10, gamma=0.3):
-        initialize_logger()
+    def __init__(self, logging_path, C=100, gamma=0.001):
+        initialize_logger(logging_path)
         self.C = C
         self.gamma = gamma
-        data_path = os.path.join(os.getcwd(), 'project2', 'Data')
+        self.logging_path = logging_path
+        self.data_path = os.path.join(os.getcwd(), 'project2', 'Data')
         self.train_x, self.train_y, self.test_x, self.test_y = load_mnist(
-            data_path, kind='train')
+            self.data_path, kind='train')
         logging.info('Dataset is loaded.')
         self.bias = 0
         self.hessian_mat = np.zeros(shape=(self.train_y.shape[0],
@@ -160,7 +161,8 @@ class SVMDecomposition(object):
                 evaluations, iterations, computational_time)
 
     def _log_info(self, acc_train, acc_test, obj_value, iterations, comp_time):
-        print('\n--------------------\n')
+        with open(self.logging_path, encoding='utf-8', mode='w') as f:
+            print('\n--------------------\n', file=f)
         logging.info(f"C: {self.C}")
         logging.info(f"gamma: {self.gamma}")
         logging.info(f"Final val of objective function: {obj_value:.5f}")
@@ -172,7 +174,9 @@ class SVMDecomposition(object):
 
 
 if __name__ == '__main__':
-    svm_decomposition = SVMDecomposition()
+    log_file = os.path.join(os.getcwd(), 'project2', 'question_2.log')
+    svm_decomposition = SVMDecomposition(logging_path=log_file)
+
     num_points = len(svm_decomposition.train_y)
     lambda_ = np.zeros((num_points, 1))
     q = 100

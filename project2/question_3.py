@@ -1,3 +1,4 @@
+import os
 import logging
 import time
 
@@ -7,8 +8,8 @@ from question_2 import SVMDecomposition
 
 
 class SVMMVP(SVMDecomposition):
-    def __init__(self, C=100, gamma=0.001):
-        super().__init__(C, gamma)
+    def __init__(self, logging_path, C=100, gamma=0.001):
+        super().__init__(logging_path, C, gamma)
 
     def optimize(self, lambda_, print_info=True):
         train_y_ = self.train_y.reshape(len(self.train_y), 1)
@@ -90,7 +91,8 @@ class SVMMVP(SVMDecomposition):
 
 
 if __name__ == "__main__":
-    solver_mvp = SVMMVP()
+    log_file = os.path.join(os.getcwd(), 'project2', 'question_3.log')
+    solver_mvp = SVMMVP(logging_path=log_file)
 
     num_points = len(solver_mvp.train_y)
     lambda_ = np.zeros((num_points, 1))

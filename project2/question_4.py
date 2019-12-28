@@ -162,10 +162,10 @@ class SVMMultiClassClassifier:
                                        self.test_x, self.train_y2,
                                        self.p_poly, opt_b)
         _, margin_test4 = self.predict(opt_alpha2, self.test_x,
-                                       self.train_x, self.train_y4,
+                                       self.test_x, self.train_y4,
                                        self.p_poly, opt_b4)
         _, margin_test6 = self.predict(opt_alpha6, self.test_x,
-                                       self.train_x, self.train_y2,
+                                       self.test_x, self.train_y6,
                                        self.p_poly, opt_b6)
 
         max_distance_test = np.argmax([margin_test2,
