@@ -1,0 +1,11 @@
+
+--------------------
+
+16:58:27 - INFO: C: 2.5
+16:58:27 - INFO: gamma: 0.01
+16:58:27 - INFO: Final val of objective function: -3465.00000
+16:58:27 - INFO: Train acc: 93.9286%
+16:58:27 - INFO: Test acc: 80.1667%
+16:58:27 - INFO: Time to find KKT point: 0.5585 seconds
+16:58:27 - INFO: Function evaluations: 693
+16:58:27 - INFO: Gradient evaluations: 693
