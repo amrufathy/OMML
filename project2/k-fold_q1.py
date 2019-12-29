@@ -5,7 +5,7 @@ x_train24, y_train24 = shuffle(x_train24, y_train24, random_state=SEED)
 y_train24_sub = np.split(y_train24, k_folds)
 x_train24_sub = np.split(x_train24, k_folds)
 
-C_params = [0.01, 0.1, 1, 10, 100, 1000, 10000]
+C_params = [0.01, 0.1, 1, 2, 2.5, 3, 6, 10, 100]
 Gamma_params = [1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 1, 10]
 
 result_dict = dict()
