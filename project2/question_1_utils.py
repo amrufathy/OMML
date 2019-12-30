@@ -3,12 +3,11 @@
 
 import os
 import time
+
 import numpy as np
 from cvxopt import matrix, solvers
-from data_extraction import load_mnist, SEED
-from sklearn.metrics import accuracy_score, confusion_matrix
+from data_extraction import load_mnist
 from sklearn.metrics.pairwise import rbf_kernel
-from sklearn.utils import shuffle
 
 data_path = os.path.join(os.getcwd(), 'Data')
 
@@ -89,7 +88,8 @@ def prediction_full_P(x, y, lambda_vector, b, x_test, rbf_gamma):
         predictions_y[t] = np.sign(decision_func_val + b)
     return predictions_y
 
-def KKT_violation(lambda_,train_y,C):
+
+def KKT_violation(lambda_, train_y, C):
     e = -1. * np.ones(shape=(train_y.shape[0], 1))
     train_y_ = train_y.reshape(len(train_y), 1)
     gradient = np.copy(e)
@@ -115,7 +115,8 @@ def KKT_violation(lambda_,train_y,C):
 
     m_lambda, M_lambda = round(
         grad_y[R].min(), 10), round(grad_y[S].min(), 10)
-    return(m_lambda - M_lambda)
+    return m_lambda - M_lambda
+
 
 def optimal_b_star(x, y, lambda_vector, rbf_gamma):
     """
@@ -138,10 +139,10 @@ def SVM_prediction(x_train, y_train, rbf_gamma, C, x_test, y_test, test=True):
     QPsolution = QP(x_train, y_train, rbf_gamma, C)
     tok = time.time()
     computational_time = tok - tik
-    #if test==True:
-        #file = open('question_1.log', mode='w+')
-        #print(f'QP COMPUTATIONAL TIME: {} SEC', file=file)
-        #file.close()
+    # if test==True:
+    # file = open('question_1.log', mode='w+')
+    # print(f'QP COMPUTATIONAL TIME: {} SEC', file=file)
+    # file.close()
     # print('QPsolution:', QPsolution)
     lambda_vector = np.array(QPsolution['x'])
     # filtering lambda vector is striclty positive (1e-7 is counted as 0)
@@ -149,5 +150,5 @@ def SVM_prediction(x_train, y_train, rbf_gamma, C, x_test, y_test, test=True):
     # print('number of nonzero lambda: ', np.count_nonzero(lambda_vector))
     b = optimal_b_star(x_train, y_train, lambda_vector, rbf_gamma)
     y_pred = prediction_full_P(x_train, y_train, lambda_vector, b, x_test, rbf_gamma)
-    result.extend((QPsolution, y_pred, np.round(computational_time,2)))
+    result.extend((QPsolution, y_pred, np.round(computational_time, 2)))
     return result

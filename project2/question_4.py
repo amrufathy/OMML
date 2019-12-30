@@ -1,8 +1,9 @@
-from os import getcwd
-from os.path import join
+import gzip
 import logging
 import time
-import gzip
+from os import getcwd
+from os.path import join
+
 import cvxopt as cvx
 import numpy as np
 from tqdm import tqdm
@@ -62,12 +63,13 @@ class SVMMultiClassClassifier:
         self.data_x = np.concatenate([x_label2, x_label4, x_label6], 0)
 
         permutation = np.random.permutation(len(self.data_x))
+
         train_x_idx = list(set(permutation[:int(
             np.ceil(len(self.data_x) * 0.3))]) ^ set(list(range(0, len(self.data_x)))))
-
         self.train_x = np.take(self.data_x, train_x_idx)
-        self.test_x = self.data_x[permutation[:int(
-            np.ceil(len(self.data_x) * 0.3))]]
+
+        test_x_idx = list(set(permutation[:int(np.ceil(len(self.data_x) * 0.3))]))
+        self.test_x = np.take(self.data_x, test_x_idx)
 
         self.data_y2 = np.concatenate([np.ones(len(x_label2)),
                                        -np.ones(len(x_label4)),
@@ -180,8 +182,8 @@ class SVMMultiClassClassifier:
 
         if print_info:
             self.log_info(self.p_poly, acc_train, acc_test,
-                          fun_2+fun_4+fun_6,
-                          iteration_2+iteration_4+iteration_6,
+                          fun_2 + fun_4 + fun_6,
+                          iteration_2 + iteration_4 + iteration_6,
                           computation_time)
 
     def predict(self, lambda_, x1, x2, y, p, b):
@@ -193,7 +195,7 @@ class SVMMultiClassClassifier:
         for i in tqdm(y_hat, desc='Predicting'):
             if y_hat[i] == labels[i]:
                 acc += 1
-        return acc/num_samples
+        return acc / num_samples
 
     def log_info(self, ploy, acc_train, acc_test, obj_value, iterations, time_):
         print('\n--------------------\n')

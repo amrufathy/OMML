@@ -1,9 +1,8 @@
-import os
 import logging
+import os
 import time
 
 import numpy as np
-
 from question_2 import SVMDecomposition
 
 
@@ -64,7 +63,7 @@ class SVMMVP(SVMDecomposition):
                         return
                 t_max = step_size.min()
                 if a > 0:
-                    t_star = -gradient[working_set].T.dot(dij_non_zero)/a
+                    t_star = -gradient[working_set].T.dot(dij_non_zero) / a
                     if t_star < t_max:
                         t_max = t_star
             lambda_ += (t_max * d_ij)

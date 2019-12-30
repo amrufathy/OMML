@@ -50,7 +50,7 @@ class SVMDecomposition(object):
         threshold = 0
         for i, sample in enumerate(self.train_x):
             threshold += self.lambda_star[i] * \
-                self.train_y[i] * self.rbf_kernel(sample, data_x)
+                         self.train_y[i] * self.rbf_kernel(sample, data_x)
         return np.sign(threshold + self.bias)
 
     def acc(self, test_x, test_y):

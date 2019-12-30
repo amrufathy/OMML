@@ -5,8 +5,8 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
-
 SEED = 1848399
+
 
 def load_mnist(path, kind='train'):
     """
