@@ -14,7 +14,7 @@ class SVMMultiClassClassifier:
     def __init__(self, logging_path, C=2.5, gamma=0.001, threshold=1e-12, p_poly=1):
         self.logging_path = logging_path
         initialize_logger(logging_path)
-        
+
         self.C = C
         self.gamma = gamma
 
@@ -72,7 +72,8 @@ class SVMMultiClassClassifier:
             np.ceil(len(self.data_x) * 0.3))]) ^ set(list(range(0, len(self.data_x)))))
         self.train_x = np.take(self.data_x, train_x_idx)
 
-        test_x_idx = list(set(permutation[:int(np.ceil(len(self.data_x) * 0.3))]))
+        test_x_idx = list(
+            set(permutation[:int(np.ceil(len(self.data_x) * 0.3))]))
         self.test_x = np.take(self.data_x, test_x_idx)
 
         self.data_y2 = np.concatenate([np.ones(len(x_label2)),
