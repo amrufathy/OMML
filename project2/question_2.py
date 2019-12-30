@@ -9,7 +9,7 @@ from utils import initialize_logger
 
 
 class SVMDecomposition(object):
-    def __init__(self, logging_path, C=100, gamma=0.001):
+    def __init__(self, logging_path, C=2.5, gamma=0.01):
         initialize_logger(logging_path)
         self.C = C
         self.gamma = gamma
@@ -101,7 +101,7 @@ class SVMDecomposition(object):
             lambda_k = np.copy(lambda_)
             grad_y = -gradient / train_y_
             idx = np.arange(0, len(train_y_)).reshape((len(train_y_), 1))
-            epsillon = 1e-7
+            epsillon = 1e-5
             lambda_l = lambda_ <= epsillon
             lambda_u = np.logical_and(lambda_ >= (self.C - epsillon), lambda_ <= self.C)
 
@@ -116,7 +116,7 @@ class SVMDecomposition(object):
                                     lambda_ < (self.C - epsillon))
             f = list(idx[f_cond])
 
-            R, S = sorted(l_plus + u_minus + f), sorted(l_minus + u_plus + f)
+            R, S = sorted(l_plus + u_minus + f), sorted(l_minus + u_plus + f),
 
             m_lambda, M_lambda = round(
                 grad_y[R].max(), 3), round(grad_y[S].min(), 3)

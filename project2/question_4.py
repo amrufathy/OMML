@@ -7,10 +7,14 @@ from os.path import join
 import cvxopt as cvx
 import numpy as np
 from tqdm import tqdm
+from utils import initialize_logger
 
 
 class SVMMultiClassClassifier:
-    def __init__(self, C=100, gamma=0.3, threshold=1e-12, p_poly=1):
+    def __init__(self, logging_path, C=2.5, gamma=0.001, threshold=1e-12, p_poly=1):
+        self.logging_path = logging_path
+        initialize_logger(logging_path)
+        
         self.C = C
         self.gamma = gamma
 
@@ -103,6 +107,7 @@ class SVMMultiClassClassifier:
         del (self.data_x, self.data_y2,
              self.data_y4, self.data_y6,
              self.grnd_truth)
+        logging.info('Dataset is loaded.')
 
     def poly_kernel(self, x, y, p):
         return np.power((np.matmul(x, y.T) + 1), p)
@@ -111,7 +116,6 @@ class SVMMultiClassClassifier:
         Q, e = cvx.matrix(P), cvx.matrix(e)
         G, h = cvx.matrix(G), cvx.matrix(constraint)
         A, b = cvx.matrix(np.array([Y])), cvx.matrix(np.full((1, 1), float(b)))
-        cvx.solvers.options['maxiters'] = 50
         res = cvx.solvers.qp(Q, e, G, h, A, b)
         return (np.array(res['x']).flatten(), res['iterations'],
                 res['primal objective'])
@@ -123,7 +127,7 @@ class SVMMultiClassClassifier:
         return (np.sum(b, 0) / float(N))
 
     def classify(self, print_info=True):
-        cvx.solvers.options["show_progress"] = True
+        logging.info("Model training process started. \n")
         tik = time.time()
         alpha0 = np.zeros(self.train_len)
         self.obj_fn = np.dot(np.dot(alpha0.T, self.P1),
@@ -161,13 +165,13 @@ class SVMMultiClassClassifier:
                              self.ground_truth, self.train_len)
 
         _, margin_test2 = self.predict(opt_alpha1, self.test_x,
-                                       self.test_x, self.train_y2,
+                                       self.train_x, self.train_y2,
                                        self.p_poly, opt_b)
         _, margin_test4 = self.predict(opt_alpha2, self.test_x,
-                                       self.test_x, self.train_y4,
+                                       self.train_x, self.train_y4,
                                        self.p_poly, opt_b4)
         _, margin_test6 = self.predict(opt_alpha6, self.test_x,
-                                       self.test_x, self.train_y6,
+                                       self.train_x, self.train_y6,
                                        self.p_poly, opt_b6)
 
         max_distance_test = np.argmax([margin_test2,
@@ -198,7 +202,8 @@ class SVMMultiClassClassifier:
         return acc / num_samples
 
     def log_info(self, ploy, acc_train, acc_test, obj_value, iterations, time_):
-        print('\n--------------------\n')
+        with open(self.logging_path, encoding='utf-8', mode='w') as f:
+            print('\n--------------------\n', file=f)
         logging.info(f"P: {ploy}")
         logging.info(f"Final val of objective function: {obj_value:.5f}")
         logging.info(f"Train acc: {acc_train * 100:.4f}%")
@@ -208,5 +213,6 @@ class SVMMultiClassClassifier:
 
 
 if __name__ == "__main__":
-    svm_classifier = SVMMultiClassClassifier()
+    log_file = join(getcwd(), 'project2', 'question_4.log')
+    svm_classifier = SVMMultiClassClassifier(log_file)
     svm_classifier.classify()

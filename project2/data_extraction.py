@@ -30,12 +30,12 @@ def load_mnist(path, kind='train'):
     """
 
     index_label2 = np.where((labels == 2))
-    x_label2 = images[index_label2][:1000, :].astype('float64')
-    y_label2 = labels[index_label2][:1000].astype('float64')
+    x_label2 = images[index_label2].astype('float64')
+    y_label2 = labels[index_label2].astype('float64')
 
     index_label4 = np.where((labels == 4))
-    x_label4 = images[index_label4][:1000, :].astype('float64')
-    y_label4 = labels[index_label4][:1000].astype('float64')
+    x_label4 = images[index_label4].astype('float64')
+    y_label4 = labels[index_label4].astype('float64')
 
     '''
     index_label6 = np.where((labels == 6))
