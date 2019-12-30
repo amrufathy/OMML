@@ -43,6 +43,8 @@ class SVMMultiClassClassifier:
         self.Gp, self.Gn = np.eye(self.train_len), -np.eye(self.train_len)
         self.G = np.concatenate([self.Gn, self.Gp], 0)
 
+        print(f'C = {self.C}, gamma = {self.gamma}')
+
     def process_dataset(self):
         labels_path = join(self.data_path, 'train-labels-idx1-ubyte.gz')
         images_path = join(self.data_path, 'train-images-idx3-ubyte.gz')
@@ -211,9 +213,3 @@ class SVMMultiClassClassifier:
         logging.info(f"Test acc: {acc_test * 100:.4f}%")
         logging.info(f"Time to find KKT point: {time_:.4f} seconds")
         logging.info(f"Function evaluations: {iterations}")
-
-
-if __name__ == "__main__":
-    log_file = join(getcwd(), 'project2', 'question_4.log')
-    svm_classifier = SVMMultiClassClassifier(log_file)
-    svm_classifier.classify()

@@ -24,6 +24,8 @@ class SVMDecomposition(object):
         self.e = -1. * np.ones(shape=(self.train_y.shape[0], 1))
         self.lambda_star = None
 
+        print(f'C = {self.C}, gamma = {self.gamma}')
+
     def rbf_kernel(self, xi, xj):
         return np.exp((-1. * self.gamma) * np.power(np.linalg.norm(xi - xj), 2))
 
@@ -116,7 +118,7 @@ class SVMDecomposition(object):
                                     lambda_ < (self.C - epsillon))
             f = list(idx[f_cond])
 
-            R, S = sorted(l_plus + u_minus + f), sorted(l_minus + u_plus + f),
+            R, S = sorted(l_plus + u_minus + f), sorted(l_minus + u_plus + f)
 
             m_lambda, M_lambda = round(
                 grad_y[R].max(), 3), round(grad_y[S].min(), 3)
@@ -171,14 +173,3 @@ class SVMDecomposition(object):
         logging.info(f"Time to find KKT point: {comp_time:.4f} seconds")
         logging.info(f"Function evaluations: {iterations}")
         logging.info(f"Gradient evaluations: {iterations}")
-
-
-if __name__ == '__main__':
-    log_file = os.path.join(os.getcwd(), 'project2', 'question_2.log')
-    svm_decomposition = SVMDecomposition(logging_path=log_file)
-
-    num_points = len(svm_decomposition.train_y)
-    lambda_ = np.zeros((num_points, 1))
-    q = 100
-
-    svm_decomposition.optimize(lambda_, q)
