@@ -1,0 +1,11 @@
+16:32:32 - INFO: Dataset is loaded.
+16:32:34 - INFO: Model training process started. 
+
+--------------------
+
+16:33:48 - INFO: P: 1
+16:33:48 - INFO: Final val of objective function: -0.00006
+16:33:48 - INFO: Train acc: 100.0000%
+16:33:48 - INFO: Test acc: 0.0000%
+16:33:48 - INFO: Time to find KKT point: 21.8249 seconds
+16:33:48 - INFO: Function evaluations: 24
