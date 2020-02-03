@@ -35,8 +35,8 @@ class SVMDecomposition(object):
         for i, xi in enumerate(self.train_x):
             for j, xj in enumerate(self.train_x):
                 gram_mat[i][j] = self.rbf_kernel(xi, xj)
-        y = np.diag(self.train_y)
-        self.hessian_mat = y.dot(self.hessian_mat).dot(y)
+        y = np.diag(self.train_y.ravel())
+        self.hessian_mat = y.dot(gram_mat).dot(y)
 
     def objective_function(self):
         F = (self.lambda_star.T.dot(self.hessian_mat).dot(
@@ -97,6 +97,8 @@ class SVMDecomposition(object):
         train_y_ = self.train_y.reshape(len(self.train_y), 1)
         self.iterations, evaluations = 0, 0
         self.initialize_hessian_mat()
+        # reinitialize
+        self.e = -1. * np.ones(shape=(self.train_y.shape[0], 1))
         gradient = np.copy(self.e)
         tik = time.time()
         logging.info("Optimization process started. \n")
@@ -108,6 +110,7 @@ class SVMDecomposition(object):
             lambda_l = lambda_ <= epsillon
             lambda_u = np.logical_and(lambda_ >= (self.C - epsillon), lambda_ <= self.C)
 
+            # lambda_l dim > train_y_ dim
             l_plus_cond, l_minus_cond = np.logical_and(lambda_l, train_y_ == 1), np.logical_and(lambda_l, train_y_ == -1)
             l_plus, l_minus = list(idx[l_plus_cond]), list(idx[l_minus_cond])
 

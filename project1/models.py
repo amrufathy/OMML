@@ -389,7 +389,7 @@ if __name__ == '__main__':
             x_train_, x_val = x_train[train_index], x_train[val_index]
             y_train_, y_val = y[train_index], y[val_index]
             start = time.time()
-            res = rbf.fit(x_train_, y_train)
+            res = rbf.fit(x_train_, y_train_)
             computational_time = time.time() - start
             train_acc.append(rbf.test_loss(x_train_, y_train_))
             val_acc.append(rbf.test_loss(x_val, y_val))
@@ -397,7 +397,7 @@ if __name__ == '__main__':
             nit.append(res['nit'])
             njev.append(res['njev'])
             comp_time.append(computational_time)
-        res_dict.update({params: [res.succes, np.mean(train_acc),
+        res_dict.update({params: [res.success, np.mean(train_acc),
                                   np.mean(val_acc), np.mean(comp_time), int(np.mean(nfev)),
                                   int(np.mean(nit)), int(np.mean(njev))]})
 
