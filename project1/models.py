@@ -10,7 +10,8 @@ import scipy.optimize as optimize
 # noinspection PyUnresolvedReferences
 from mpl_toolkits.mplot3d import Axes3D
 from sklearn.cluster import KMeans
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, KFold
+
 
 SEED = 1848399
 random.seed(SEED)
@@ -87,7 +88,8 @@ class MLP(Network):
 
     def fit(self, inputs, labels):
         # omega contains all free params of the network
-        omega = np.concatenate([self.V, self.W.reshape(self.W.size, 1), self.b.T])
+        omega = np.concatenate(
+            [self.V, self.W.reshape(self.W.size, 1), self.b.T])
         self.__run_minimization(inputs, labels, omega)
 
     def extreme_learning(self, inputs, labels):
@@ -96,21 +98,25 @@ class MLP(Network):
         self.__run_minimization(inputs, labels, omega)
 
     def decomposition(self, inputs, labels):
-        raise NotImplementedError('Decomposition method is not implemented for the MLP network!')
+        raise NotImplementedError(
+            'Decomposition method is not implemented for the MLP network!')
 
     def test_loss(self, inputs, labels):
         # only for use on val/test data, not during training
-        omega = np.concatenate([self.V, self.W.reshape(self.W.size, 1), self.b.T])
+        omega = np.concatenate(
+            [self.V, self.W.reshape(self.W.size, 1), self.b.T])
         outputs = self.forward(inputs, omega)
         return np.mean(np.square(outputs - labels))
 
     def __run_minimization(self, inputs, labels, omega):
         # initial error
         print(f'Initial training error: {self.test_loss(inputs, labels):.4f}')
-        print(f'Initial value of objective function: {self.loss(omega, inputs, labels):.4f}')
+        print(
+            f'Initial value of objective function: {self.loss(omega, inputs, labels):.4f}')
         # back-propagation
         tik = time.time()
-        optimal = optimize.minimize(fun=self.loss, x0=omega, args=(inputs, labels))
+        optimal = optimize.minimize(
+            fun=self.loss, x0=omega, args=(inputs, labels))
         tok = time.time()
 
         # print out required info
@@ -131,7 +137,8 @@ class MLP(Network):
         print(f'Final Training error: {self.test_loss(inputs, labels):.4f}')
 
     def save(self, filename=''):
-        omega = np.concatenate([self.V, self.W.reshape(self.W.size, 1), self.b.T])
+        omega = np.concatenate(
+            [self.V, self.W.reshape(self.W.size, 1), self.b.T])
         filename = 'mlp_weights' if filename == '' else filename
         np.save(filename, omega)
 
@@ -141,7 +148,8 @@ class MLP(Network):
         self.__unpack_omega(omega)
 
     def surface_plot(self, inputs, title='', *args):
-        optimal_parameters = np.concatenate([self.V, self.W.reshape(self.W.size, 1), self.b.T])
+        optimal_parameters = np.concatenate(
+            [self.V, self.W.reshape(self.W.size, 1), self.b.T])
         super().surface_plot(inputs, optimal_parameters, 'MLP' if title == '' else title)
 
     def __unpack_omega(self, omega):
@@ -149,7 +157,8 @@ class MLP(Network):
         self.V = omega[:self.V.size].reshape(*self.V.shape)
         # if `W`, `b` are in omega, unpack it (full minimization)
         if omega.size > self.V.size:
-            self.W = omega[self.V.size: self.V.size + self.W.size].reshape(*self.W.shape)
+            self.W = omega[self.V.size: self.V.size +
+                           self.W.size].reshape(*self.W.shape)
             self.b = omega[self.V.size + self.W.size:].reshape(*self.b.shape)
 
 
@@ -186,7 +195,7 @@ class RBF(Network):
     def fit(self, inputs, labels):
         # omega contains all free params of the network
         omega = np.concatenate([self.V, self.C.reshape(self.C.size, 1)])
-        self.__run_minimization(inputs, labels, omega)
+        return self.__run_minimization(inputs, labels, omega)
 
     def extreme_learning(self, inputs, labels):
         # pick `N` centers from `inputs`
@@ -200,13 +209,15 @@ class RBF(Network):
         early_stopping_cond = 1e-5
         sum_of_gradients, i, max_iters = 1, 0, 50
 
-        clusters = KMeans(n_clusters=self.hidden_size, random_state=SEED).fit(inputs)
+        clusters = KMeans(n_clusters=self.hidden_size,
+                          random_state=SEED).fit(inputs)
         self.C = np.array(clusters.cluster_centers_).T
 
         omega = self.V
 
         print(f'Initial training error: {self.test_loss(inputs, labels):.4f}')
-        print(f'Initial value of objective function: {self.loss(omega, inputs, labels):.4f}')
+        print(
+            f'Initial value of objective function: {self.loss(omega, inputs, labels):.4f}')
 
         while sum_of_gradients > early_stopping_cond and i < max_iters:
             # optimize V
@@ -231,10 +242,12 @@ class RBF(Network):
     def __run_minimization(self, inputs, labels, omega):
         # initial error
         print(f'Initial training error: {self.test_loss(inputs, labels):.4f}')
-        print(f'Initial value of objective function: {self.loss(omega, inputs, labels):.4f}')
+        print(
+            f'Initial value of objective function: {self.loss(omega, inputs, labels):.4f}')
         # back-propagation
         tik = time.time()
-        optimal = optimize.minimize(fun=self.loss, x0=omega, args=(inputs, labels))
+        optimal = optimize.minimize(
+            fun=self.loss, x0=omega, args=(inputs, labels))
         tok = time.time()
 
         # print out required info
@@ -273,7 +286,8 @@ class RBF(Network):
         self.__unpack_omega(omega)
 
     def surface_plot(self, inputs, title='', *args):
-        optimal_parameters = np.concatenate([self.V, self.C.reshape(self.C.size, 1)])
+        optimal_parameters = np.concatenate(
+            [self.V, self.C.reshape(self.C.size, 1)])
         super().surface_plot(inputs, optimal_parameters, 'RBF' if title == '' else title)
 
     def __unpack_omega(self, omega):
@@ -309,7 +323,8 @@ def grid_search():
 
         val_err = mlp.test_loss(x_val, y_val)
         test_err = mlp.test_loss(x_test, y_test)
-        print(f'\nParams: {params} <=> Val error: {val_err:.4f}, Test error: {test_err:.4f}')
+        print(
+            f'\nParams: {params} <=> Val error: {val_err:.4f}, Test error: {test_err:.4f}')
 
         if val_err < best_val_err:
             best_val_err = val_err
@@ -333,7 +348,8 @@ def grid_search():
 
         val_err = rbf.test_loss(x_val, y_val)
         test_err = rbf.test_loss(x_test, y_test)
-        print(f'\nParams: {params} <=> Val error: {val_err:.4f}, Test error: {test_err:.4f}')
+        print(
+            f'\nParams: {params} <=> Val error: {val_err:.4f}, Test error: {test_err:.4f}')
 
         if val_err < best_val_err:
             best_val_err = val_err
@@ -351,6 +367,42 @@ if __name__ == '__main__':
     x = dataset[1:, :2]
     y = dataset[1:, 2]
     y = np.expand_dims(y, -1)  # row -> column vector
+
+    N = [5, 10, 25, 50]  # hidden units
+    rho = [1e-3, 1e-4, 1e-5]  # regularization weight
+    sigma = [0.25, 0.5, 1, 2]  # spread of gaussian function (RBF)
+
+    # GRID SEARCH & KFOLDS
+    import time
+    import json
+    res_dict = dict()
+    x_train, x_rest, y_train, y_rest = train_test_split(
+        x, y, train_size=0.7, random_state=SEED)
+    kf = KFold(n_splits=5, shuffle=True, random_state=SEED)
+    for params in itertools.product(*(N, rho, sigma)):
+        n, r, s = params
+        rbf = RBF(hidden_size=n, _rho=r, _sigma=s)
+        comp_time = []
+        nfev, nit, njev = [], [], []
+        train_acc, val_acc = [], []
+        for train_index, val_index in kf.split(x_train):
+            x_train_, x_val = x_train[train_index], x_train[val_index]
+            y_train_, y_val = y[train_index], y[val_index]
+            start = time.time()
+            res = rbf.fit(x_train_, y_train)
+            computational_time = time.time() - start
+            train_acc.append(rbf.test_loss(x_train_, y_train_))
+            val_acc.append(rbf.test_loss(x_val, y_val))
+            nfev.append(res['nfev'])
+            nit.append(res['nit'])
+            njev.append(res['njev'])
+            comp_time.append(computational_time)
+        res_dict.update({params: [res.succes, np.mean(train_acc),
+                                  np.mean(val_acc), np.mean(comp_time), int(np.mean(nfev)),
+                                  int(np.mean(nit)), int(np.mean(njev))]})
+
+    with open('RBF_GridSearch_KFolds.json', encoding='uft-8', mode='w+') as file:
+        file.write(json.dump(res_dict))
 
     # train 70%, validation 15%, test 15%
     x_train, x_rest, y_train, y_rest = train_test_split(
