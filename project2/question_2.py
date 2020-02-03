@@ -90,11 +90,12 @@ class SVMDecomposition(object):
     def qp_solver(self, working_set, not_working_set, lambda_):
         locals = self.build_mat(working_set, not_working_set, lambda_)
         res = solvers.qp(*locals)
+        self.dual_obj = res.get('dual objective')
         return np.array(res.get('x')), res.get('iterations')
 
     def optimize(self, lambda_, q, print_info=True):
         train_y_ = self.train_y.reshape(len(self.train_y), 1)
-        iterations, evaluations = 0, 0
+        self.iterations, evaluations = 0, 0
         self.initialize_hessian_mat()
         gradient = np.copy(self.e)
         tik = time.time()
@@ -120,8 +121,7 @@ class SVMDecomposition(object):
 
             R, S = sorted(l_plus + u_minus + f), sorted(l_minus + u_plus + f)
 
-            m_lambda, M_lambda = round(
-                grad_y[R].max(), 3), round(grad_y[S].min(), 3)
+            m_lambda, M_lambda = grad_y[R].max(), grad_y[S].min()
 
             if m_lambda <= M_lambda:
                 logging.info(
@@ -146,7 +146,7 @@ class SVMDecomposition(object):
                 iterations += 1
         logging.info("Optimization done. \n")
         tok = time.time()
-        computational_time = tok - tik
+        self.computational_time = tok - tik
         self.lambda_star = lambda_
         support_vector_idx = lambda_.argmax()
         bias_x = self.train_x[support_vector_idx]
@@ -157,10 +157,10 @@ class SVMDecomposition(object):
         obj_val = self.objective_function()
         if print_info:
             self._log_info(acc_train, acc_test, obj_val,
-                           iterations, computational_time)
+                           iterations, self.computational_time)
 
         return (lambda_, acc_train, acc_test, obj_val,
-                evaluations, iterations, computational_time)
+                evaluations, iterations, self.computational_time)
 
     def _log_info(self, acc_train, acc_test, obj_value, iterations, comp_time):
         with open(self.logging_path, encoding='utf-8', mode='w') as f:

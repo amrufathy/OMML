@@ -30,12 +30,12 @@ def load_mnist(path, kind='train'):
     """
 
     index_label2 = np.where((labels == 2))
-    x_label2 = images[index_label2].astype('float64')
-    y_label2 = labels[index_label2].astype('float64')
+    x_label2 = images[index_label2][:1000, :].astype('float64')
+    y_label2 = labels[index_label2][:1000].astype('float64')
 
     index_label4 = np.where((labels == 4))
-    x_label4 = images[index_label4].astype('float64')
-    y_label4 = labels[index_label4].astype('float64')
+    x_label4 = images[index_label4][:1000, :].astype('float64')
+    y_label4 = labels[index_label4][:1000].astype('float64')
 
     '''
     index_label6 = np.where((labels == 6))
@@ -60,13 +60,11 @@ def load_mnist(path, kind='train'):
     x_label_24 = np.vstack((x_label2, x_label4))
     y_label_24 = np.concatenate((y_label2, y_label4))
 
-    x_train24, x_test24, y_train24, y_test24 = train_test_split(
-        x_label_24, y_label_24, test_size=0.3, random_state=SEED)
-
     scaler = StandardScaler()
-    scaler.fit(x_train24)
-    x_train24 = scaler.transform(x_train24)
-    x_test24 = scaler.transform(x_test24)
+    scaler.fit(x_label_24)
+    x_label_24 = scaler.transform(x_label_24)
+
+    x_train24, x_test24, y_train24, y_test24 = train_test_split(x_label_24, y_label_24, test_size=0.3, random_state=SEED)
 
     return x_train24, y_train24, x_test24, y_test24
 
